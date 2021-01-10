@@ -143,3 +143,7 @@ class Bot(ClientXMPP):
             kwargs["mtype"] = "groupchat"
 
         self.send_message(**kwargs)
+
+    def react(self, message):
+        message = "You need to write your own `react` implementation"
+        raise NotImplementedError(message)
