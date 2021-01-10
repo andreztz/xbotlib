@@ -124,7 +124,7 @@ class Bot(ClientXMPP):
         except KeyboardInterrupt:
             pass
 
-    def reply(self, to=None, room=None, body=None):
+    def reply(self, body, to=None, room=None):
         """Send back a reply."""
         if to is None and room is None:
             message = "`to` or `room` arguments required for `reply`"

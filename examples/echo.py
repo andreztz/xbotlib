@@ -11,7 +11,7 @@ class EchoBot(Bot):
     def react(self, message):
         """Send back what we get."""
         if message.type == "chat":
-            self.reply(to=message.sender, body=message.body)
+            self.reply(message.body, to=message.sender)
 
 
 EchoBot()

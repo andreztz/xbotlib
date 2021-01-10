@@ -30,7 +30,7 @@ from xbotlib import Bot
 class EchoBot(Bot):
     def react(self, message):
         if message.type == "chat":
-          self.reply(to=message.sender, body=message.body)
+          self.reply(message.body, to=message.sender)
 
 MyBot()
 ```
@@ -54,7 +54,7 @@ underling functions can be extended. For example, if you want to enable more
 plugins or add different functionality. If something feels awkward then please
 raise a ticket for that. Seamlessness is still a bitch but we're trying anyway.
 
-### Bot.react
+> Bot.react(message)
 
 A function which you define in your bot implementation in order to respond to
 chat messages. You can respond to both direct messages and group chat messages
@@ -65,7 +65,7 @@ Arguments:
 
 - **message**: sent message and metadata (see [message](#message) reference below)
 
-### Bot.reply
+> Bot.reply(body, to=None, room=None)
 
 Send back a response to a direct chat message.
 
@@ -75,9 +75,10 @@ Arguments:
 - **room**: which room to reply to (group chat)
 - **body**: the message to send
 
-### Message
+> EasyMessage
 
-A simple message format.
+A simple message format. This is the type that you work with when your function
+accepts a `message` argument.
 
 Attributes:
 

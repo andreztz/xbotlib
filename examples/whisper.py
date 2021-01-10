@@ -24,7 +24,7 @@ class WhisperBot(Bot):
         """Receive direct messages and pass them to group chats."""
         if message.type == "chat" and "whisper" in message.body:
             _, room, whisper = message.body.split(":")
-            self.reply(room=room, body=f"*whispers* {whisper}")
+            self.reply(f"*whispers* {whisper}", room=room)
 
 
 WhisperBot()
