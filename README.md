@@ -71,9 +71,9 @@ Send back a response to a direct chat message.
 
 Arguments:
 
+- **body**: the message to send
 - **to**: which user account to reply to (direct chat)
 - **room**: which room to reply to (group chat)
-- **body**: the message to send
 
 > EasyMessage
 
