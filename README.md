@@ -14,8 +14,8 @@ $ pip install xbotlib
 from xbotlib import Bot
 
 class EchoBot(Bot):
-    def react(self, msg):
-        self.reply(to=message.sender, body=message.body)
+    def reply_direct_chat(self, message):
+        self.send_direct_chat(to=message.sender, body=message.body)
 
 MyBot()
 ```
@@ -28,3 +28,47 @@ And then `python echo.py`.
 - **[WhisperBot](./examples/whisper.py)**: Pseudo-anonymous whispering in group chats
 
 See the [examples](./examples/) directoy for all listings.
+
+## API Reference
+
+Your bot always sub-classes the `Bot` class provided from `xbotlib`. All
+underling functions can be extended. For example, if you want to enable more
+plugins or add different functionality. If something feels awkward then please
+raise a ticket for that. See the one file [source](./xbotlib.py) here.
+
+### send_direct_chat
+
+Send back a response to a direct chat message.
+
+Arguments:
+
+- **to**: who to send it to (can be a user or a room)
+- **body**: the message to send
+
+### send_group_chat
+
+Send back a response to a group chat message.
+
+Arguments:
+
+- **to**: who to send it to (can be a user or a room)
+- **body**: the message to send
+
+## Roadmap
+
+- The library only handles reactions. The bots can only send messages when they
+  receive a message. It would be nice to allow for sending messages at specific
+  times.
+
+- Extend the `bot.conf` to allow for multiple bot configurations.
+
+- Sort out something for how to deploy them. It's easy to run them locally but
+  hard to run them on server. Maybe something can be done for that as well.
+
+## Changes
+
+See the [CHANGELOG.md](./CHANGELOG.md).
+
+## License
+
+See the [LICENSE](./LICENSE.md).

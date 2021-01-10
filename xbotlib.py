@@ -20,7 +20,7 @@ class EasyMessage:
 
     @property
     def sender(self):
-        return self.message["from"]
+        return self.message["from"].bare
 
     @property
     def receiver(self):
@@ -90,7 +90,7 @@ class Bot(ClientXMPP):
     def message(self, message):
         """Handle message event."""
         if message["type"] in ("chat", "normal"):
-            self.react(EasyMessage(message))
+            self.reply_direct_chat(EasyMessage(message))
 
     def session_start(self, event):
         """Handle session_start event."""
@@ -107,7 +107,7 @@ class Bot(ClientXMPP):
         """Handle groupchat_message event."""
         if message["type"] in ("groupchat", "normal"):
             if message["mucnick"] != self.config["bot"]["nick"]:
-                self.react(EasyMessage(message))
+                self.reply_group_chat(EasyMessage(message))
 
     def register_xmpp_plugins(self):
         """Register XMPP plugins that the bot supports."""
@@ -124,6 +124,10 @@ class Bot(ClientXMPP):
         except KeyboardInterrupt:
             pass
 
-    def reply(self, to, body, type="chat"):
-        """Send a message."""
-        self.send_message(mto=to, mbody=body, mtype=type)
+    def send_direct_chat(self, to, body):
+        """Reply to a direct chat message."""
+        self.send_message(mto=to, mbody=body, mtype="chat")
+
+    def send_group_chat(self, to, body):
+        """Reply to a group chat message."""
+        self.send_message(mto=to, mbody=body, mtype="groupchat")

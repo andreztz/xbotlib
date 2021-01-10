@@ -16,19 +16,15 @@ class WhisperBot(Bot):
 
     So, I might write it like so.
 
-    whisper:myroom@muc.foo.com:hey, i actually really like avril lavigne!
+    whisper:myroom@muc.foo.com:i love the music of avril lavigne
 
     """
 
-    def react(self, message):
+    def reply_direct_chat(self, message):
         """Receive direct messages and pass them to group chats."""
-        if message.type == "groupchat":
-            return
-
         if "whisper" in message.body:
             _, room, whisper = message.body.split(":")
-            body = f"*whispers* {whisper}"
-            self.reply(to=room, body=body, type="groupchat")
+            self.send_group_chat(to=room, body=f"*whispers* {whisper}")
 
 
 WhisperBot()
