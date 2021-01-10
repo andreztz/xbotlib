@@ -15,13 +15,16 @@ from xbotlib import Bot
 
 class EchoBot(Bot):
     def react(self, msg):
-        self.reply(f"echo: {msg}")
+        self.reply(to=message.sender, body=message.body)
 
 MyBot()
 ```
 
 And then `python echo.py`.
 
-## API
+## More Examples
 
-TODO.
+- **[EchoBot](./examples/echo.py)**: Sends back what you sent it
+- **[WhisperBot](./examples/whisper.py)**: Pseudo-anonymous whispering in group chats
+
+See the [examples](./examples/) directoy for all listings.

@@ -2,10 +2,9 @@ from xbotlib import Bot
 
 
 class EchoBot(Bot):
-    """SYN/ACK bot for testing things work.
+    """Gives back what you sent it.
 
-    Just direct message the bot and see if you get back what you sent. If so,
-    then you know your setup is working.
+    Just direct message the bot and see if you get back what you sent.
 
     """
 
