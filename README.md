@@ -9,11 +9,10 @@
 
 A friendly lightweight wrapper around
 [slixmpp](https://slixmpp.readthedocs.io/) for writing XMPP bots in Python. The
-goal is to make writing and running XMPP bots easy and fun.
-
-`xbotlib` is a [single file implementation](./xbotlib.py) which can easily be
-understood and extended. It provides a small API surface which reflects the
-`slixmpp` way of doing things.
+goal is to make writing and running XMPP bots easy and fun. `xbotlib` is a
+[single file implementation](./xbotlib.py) which can easily be understood and
+extended. It provides a small API surface which reflects the `slixmpp` way of
+doing things.
 
 ## Install
 
@@ -22,6 +21,8 @@ $ pip install xbotlib
 ```
 
 ## Example
+
+Put the following in a `echo.py` file.
 
 ```python
 from xbotlib import Bot
@@ -35,8 +36,9 @@ MyBot()
 ```
 
 And then `python echo.py`. You will be asked a few questions like which account
-details your bot will be using. This will generate a `bot.conf` file in the
-same working directory for further use.
+details your bot will be using.
+
+This will generate a `bot.conf` file in the same working directory for further use.
 
 ## More Examples
 
