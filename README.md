@@ -42,8 +42,8 @@ See the [examples](./examples/) directoy for all listings.
 
 Your bot always sub-classes the `Bot` class provided from `xbotlib`. All
 underling functions can be extended. For example, if you want to enable more
-plugins or add different functionality. If something feels awkward then please
-raise a ticket for that. See the one file [source](./xbotlib.py) here.
+plugins or add different functionality. If something feels awkwardthen please
+raise a ticket for that. Seamlessness is still a bitch but we're trying anyway.
 
 ### send_direct_chat
 
