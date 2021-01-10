@@ -2,6 +2,15 @@
 
 ## XMPP bots for humans
 
+A friendly lightweight wrapper around [slixmpp](https://slixmpp.readthedocs.io/).
+
+`xbotlib` doesn't want to obscure the workings of the underlying library or
+invent a totally new API. To this end, `xbotlib` is a [single file
+implementation](./xbotlib.py) which can easily be understood and extended. It
+provides a small API surface which reflects the `slixmpp` way of doing things.
+
+The goal is to make writing and running XMPP bots in Python easy and fun.
+
 ## Install
 
 ```sh
