@@ -49,17 +49,20 @@ class Bot(ClientXMPP):
 
     def generate_config(self):
         """Generate bot configuration."""
-        jid = (
-            input("XMPP address of your bot (e.g. alice@myserver.com): ")
-            or "alice@myserver.com"
-        )
+        jid = input("XMPP address (e.g. foo@bar.com): ") or "foo@bar.com"
         password = (
-            getpass("Password for the bot account (e.g. my-cool-password): ")
-            or "my-cool-password"
+            getpass("Password (e.g. my-cool-password): ") or "my-cool-password"
         )
+        room = input("XMPP room (e.g. foo@bar.com): ")
+        nick = input("Nickname (e.g. lurkbot): ")
 
         config = ConfigParser()
         config["bot"] = {"jid": jid, "password": password}
+
+        if room:
+            config["bot"]["room"] = room
+        if nick:
+            config["bot"]["nick"] = nick
 
         with open("bot.conf", "w") as file_handle:
             config.write(file_handle)
