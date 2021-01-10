@@ -1,5 +1,7 @@
 # xbotlib
 
+[![PyPI version](https://badge.fury.io/py/xbotlib.svg)](https://badge.fury.io/py/xbotlib)
+
 ## XMPP bots for humans
 
 > status: experimental
