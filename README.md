@@ -63,7 +63,7 @@ Arguments:
 - **to**: who to send it to (can be a user or a room)
 - **body**: the message to send
 
-## Bot.reply_group_chat
+### Bot.reply_group_chat
 
 A function which you define in your bot implementation in order to respond to
 group chat messages.
