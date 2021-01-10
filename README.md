@@ -89,14 +89,7 @@ Attributes:
 
 ## Roadmap
 
-- The library only handles reactions. The bots can only send messages when they
-  receive a message. It would be nice to allow for sending messages at specific
-  times.
-
-- Extend the `bot.conf` to allow for multiple bot configurations.
-
-- Sort out something for how to deploy them. It's easy to run them locally but
-  hard to run them on a server. Maybe something can be done for that as well.
+See the [issue tracker](https://git.autonomic.zone/decentral1se/xbotlib/issues).
 
 ## Changes
 
