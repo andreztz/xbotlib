@@ -20,11 +20,11 @@ class WhisperBot(Bot):
 
     """
 
-    def reply_direct_chat(self, message):
+    def react(self, message):
         """Receive direct messages and pass them to group chats."""
-        if "whisper" in message.body:
+        if message.type == "chat" and "whisper" in message.body:
             _, room, whisper = message.body.split(":")
-            self.send_group_chat(to=room, body=f"*whispers* {whisper}")
+            self.reply(room=room, body=f"*whispers* {whisper}")
 
 
 WhisperBot()

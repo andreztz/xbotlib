@@ -2,14 +2,15 @@
 
 ## XMPP bots for humans
 
-A friendly lightweight wrapper around [slixmpp](https://slixmpp.readthedocs.io/).
+> status: experimental
 
-`xbotlib` doesn't want to obscure the workings of the underlying library or
-invent a totally new API. To this end, `xbotlib` is a [single file
-implementation](./xbotlib.py) which can easily be understood and extended. It
-provides a small API surface which reflects the `slixmpp` way of doing things.
+A friendly lightweight wrapper around
+[slixmpp](https://slixmpp.readthedocs.io/) for writing XMPP bots in Python. The
+goal is to make writing and running XMPP bots easy and fun.
 
-The goal is to make writing and running XMPP bots in Python easy and fun.
+`xbotlib` is a [single file implementation](./xbotlib.py) which can easily be
+understood and extended. It provides a small API surface which reflects the
+`slixmpp` way of doing things.
 
 ## Install
 
@@ -23,13 +24,16 @@ $ pip install xbotlib
 from xbotlib import Bot
 
 class EchoBot(Bot):
-    def reply_direct_chat(self, message):
-        self.send_direct_chat(to=message.sender, body=message.body)
+    def react(self, message):
+        if message.type == "chat":
+          self.reply(to=message.sender, body=message.body)
 
 MyBot()
 ```
 
-And then `python echo.py`.
+And then `python echo.py`. You will be asked a few questions like which account
+details your bot will be using. This will generate a `bot.conf` file in the
+same working directory for further use.
 
 ## More Examples
 
@@ -45,40 +49,25 @@ underling functions can be extended. For example, if you want to enable more
 plugins or add different functionality. If something feels awkwardthen please
 raise a ticket for that. Seamlessness is still a bitch but we're trying anyway.
 
-### Bot.reply_direct_chat
+### Bot.react
 
 A function which you define in your bot implementation in order to respond to
-direct chat messages.
+chat messages. You can respond to both direct messages and group chat messages
+in this function by checking the `message.type` which can be either `chat` or
+`groupchat`.
 
 Arguments:
 
 - **message**: sent message and metadata (see [message](#message) reference below)
 
-### Bot.send_direct_chat
+### Bot.reply
 
 Send back a response to a direct chat message.
 
 Arguments:
 
-- **to**: who to send it to (can be a user or a room)
-- **body**: the message to send
-
-### Bot.reply_group_chat
-
-A function which you define in your bot implementation in order to respond to
-group chat messages.
-
-Arguments:
-
-- **message**: sent message and metadata (see [message](#message) reference below)
-
-### Bot.send_group_chat
-
-Send back a response to a group chat message.
-
-Arguments:
-
-- **to**: who to send it to (can be a user or a room)
+- **to**: which user account to reply to (direct chat)
+- **room**: which room to reply to (group chat)
 - **body**: the message to send
 
 ### Message
@@ -87,11 +76,11 @@ A simple message format.
 
 Attributes:
 
-- **body**
-- **sender**
-- **receive**
-- **nickname**
-- **type**
+- **body**: the body of the message
+- **sender**: the sender of the message
+- **receive**: the receive of the message
+- **nickname**: the nickname of the sender
+- **type**: the type of message (`chat` or `groupchat`)
 
 ## Roadmap
 
@@ -102,7 +91,7 @@ Attributes:
 - Extend the `bot.conf` to allow for multiple bot configurations.
 
 - Sort out something for how to deploy them. It's easy to run them locally but
-  hard to run them on server. Maybe something can be done for that as well.
+  hard to run them on a server. Maybe something can be done for that as well.
 
 ## Changes
 

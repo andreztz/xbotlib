@@ -8,9 +8,10 @@ class EchoBot(Bot):
 
     """
 
-    def reply_direct_chat(self, message):
+    def react(self, message):
         """Send back what we get."""
-        self.send_direct_chat(to=message.sender, body=message.body)
+        if message.type == "chat":
+            self.reply(to=message.sender, body=message.body)
 
 
 EchoBot()

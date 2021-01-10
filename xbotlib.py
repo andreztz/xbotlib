@@ -61,7 +61,7 @@ class Bot(ClientXMPP):
         password = (
             getpass("Password (e.g. my-cool-password): ") or "my-cool-password"
         )
-        room = input("XMPP room (e.g. foo@bar.com): ")
+        room = input("XMPP room (e.g. foo@muc.bar.com): ")
         nick = input("Nickname (e.g. lurkbot): ")
 
         config = ConfigParser()
@@ -90,7 +90,7 @@ class Bot(ClientXMPP):
     def message(self, message):
         """Handle message event."""
         if message["type"] in ("chat", "normal"):
-            self.reply_direct_chat(EasyMessage(message))
+            self.react(EasyMessage(message))
 
     def session_start(self, event):
         """Handle session_start event."""
@@ -107,7 +107,7 @@ class Bot(ClientXMPP):
         """Handle groupchat_message event."""
         if message["type"] in ("groupchat", "normal"):
             if message["mucnick"] != self.config["bot"]["nick"]:
-                self.reply_group_chat(EasyMessage(message))
+                self.react(EasyMessage(message))
 
     def register_xmpp_plugins(self):
         """Register XMPP plugins that the bot supports."""
@@ -124,10 +124,22 @@ class Bot(ClientXMPP):
         except KeyboardInterrupt:
             pass
 
-    def send_direct_chat(self, to, body):
-        """Reply to a direct chat message."""
-        self.send_message(mto=to, mbody=body, mtype="chat")
+    def reply(self, to=None, room=None, body=None):
+        """Send back a reply."""
+        if to is None and room is None:
+            message = "`to` or `room` arguments required for `reply`"
+            raise RuntimeError(message)
 
-    def send_group_chat(self, to, body):
-        """Reply to a group chat message."""
-        self.send_message(mto=to, mbody=body, mtype="groupchat")
+        if to is not None and room is not None:
+            message = "Cannot send to both `to` and `room` for `reply`"
+            raise RuntimeError(message)
+
+        kwargs = {"mbody": body}
+        if to is not None:
+            kwargs["mto"] = to
+            kwargs["mtype"] = "chat"
+        else:
+            kwargs["mto"] = room
+            kwargs["mtype"] = "groupchat"
+
+        self.send_message(**kwargs)
