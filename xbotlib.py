@@ -99,7 +99,11 @@ class Bot(ClientXMPP):
     def run(self):
         """Run the bot."""
         self.connect()
-        self.process()
+
+        try:
+            self.process()
+        except KeyboardInterrupt:
+            pass
 
     def reply(self, to, body, type="chat"):
         """Send a message."""
