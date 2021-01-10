@@ -42,10 +42,7 @@ class Bot(ClientXMPP):
         config_file_path = Path(self.CONFIG_FILE).absolute()
 
         if not exists(config_file_path):
-            print(f"No {self.CONFIG_FILE} found, generating you one now...")
             self.generate_config()
-        else:
-            print(f"Discovered {config_file_path}...")
 
         self.config = ConfigParser()
         self.config.read(config_file_path)
