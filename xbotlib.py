@@ -8,6 +8,25 @@ from pathlib import Path
 from slixmpp import ClientXMPP
 
 
+class EasyMessage:
+    """A simple message interface."""
+
+    def __init__(self, message):
+        self.message = message
+
+    @property
+    def body(self):
+        return self.message["body"]
+
+    @property
+    def sender(self):
+        return self.message["from"]
+
+    @property
+    def receiver(self):
+        return self.message["to"]
+
+
 class Bot(ClientXMPP):
     CONFIG_FILE = "bot.conf"
 
@@ -63,7 +82,7 @@ class Bot(ClientXMPP):
     def message(self, message):
         """Handle message event."""
         if message["type"] in ("chat", "normal"):
-            self.react(message)
+            self.react(EasyMessage(message))
 
     def session_start(self, event):
         """Handle session_start event."""
@@ -84,3 +103,7 @@ class Bot(ClientXMPP):
         """Run the bot."""
         self.connect()
         self.process()
+
+    def reply(self, to, body, type="chat"):
+        """Send a message."""
+        self.send_message(mto=to, mbody=body, mtype=type)
