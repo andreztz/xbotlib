@@ -45,7 +45,16 @@ underling functions can be extended. For example, if you want to enable more
 plugins or add different functionality. If something feels awkwardthen please
 raise a ticket for that. Seamlessness is still a bitch but we're trying anyway.
 
-### send_direct_chat
+### Bot.reply_direct_chat
+
+A function which you define in your bot implementation in order to respond to
+direct chat messages.
+
+Arguments:
+
+- **message**: sent message and metadata (see [message](#message) reference below)
+
+### Bot.send_direct_chat
 
 Send back a response to a direct chat message.
 
@@ -54,7 +63,16 @@ Arguments:
 - **to**: who to send it to (can be a user or a room)
 - **body**: the message to send
 
-### send_group_chat
+## Bot.reply_group_chat
+
+A function which you define in your bot implementation in order to respond to
+group chat messages.
+
+Arguments:
+
+- **message**: sent message and metadata (see [message](#message) reference below)
+
+### Bot.send_group_chat
 
 Send back a response to a group chat message.
 
@@ -62,6 +80,18 @@ Arguments:
 
 - **to**: who to send it to (can be a user or a room)
 - **body**: the message to send
+
+### Message
+
+A simple message format.
+
+Attributes:
+
+- **body**
+- **sender**
+- **receive**
+- **nickname**
+- **type**
 
 ## Roadmap
 
