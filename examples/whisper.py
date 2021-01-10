@@ -10,11 +10,25 @@ class WhisperBot(Bot):
     will then do this on your behalf and not reveal your identity. This is nice
     when you want to communicate with the group somewhat anonymously.
 
+    The bot accepts messages in the following form.
+
+    whisper:<room>:<message>
+
+    So, I might write it like so.
+
+    whisper:myroom@muc.foo.com:hey, i actually really like avril lavigne!
+
     """
 
     def react(self, message):
         """Receive direct messages and pass them to group chats."""
-        pass
+        if message.type == "groupchat":
+            return
+
+        if "whisper" in message.body:
+            _, room, whisper = message.body.split(":")
+            body = f"*whispers* {whisper}"
+            self.reply(to=room, body=body, type="groupchat")
 
 
 WhisperBot()

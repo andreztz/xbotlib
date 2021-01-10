@@ -26,6 +26,14 @@ class EasyMessage:
     def receiver(self):
         return self.message["to"]
 
+    @property
+    def nickname(self):
+        return self.message["mucnick"]
+
+    @property
+    def type(self):
+        return self.message["type"]
+
 
 class Bot(ClientXMPP):
     CONFIG_FILE = "bot.conf"
@@ -70,8 +78,8 @@ class Bot(ClientXMPP):
     def init_bot(self):
         """Initialise bot with connection details."""
         jid = self.config["bot"]["jid"]
-        passwd = self.config["bot"]["password"]
-        ClientXMPP.__init__(self, jid, passwd)
+        password = self.config["bot"]["password"]
+        ClientXMPP.__init__(self, jid, password)
 
     def register_xmpp_event_handlers(self):
         """Register functions against specific XMPP event handlers."""
@@ -89,9 +97,17 @@ class Bot(ClientXMPP):
         self.send_presence()
         self.get_roster()
 
+        room = self.config["bot"].get("room")
+        nick = self.config["bot"].get("nick")
+
+        if room and nick:
+            self.plugin["xep_0045"].join_muc(room, nick)
+
     def groupchat_message(self, message):
         """Handle groupchat_message event."""
-        pass
+        if message["type"] in ("groupchat", "normal"):
+            if message["mucnick"] != self.config["bot"]["nick"]:
+                self.react(EasyMessage(message))
 
     def register_xmpp_plugins(self):
         """Register XMPP plugins that the bot supports."""
