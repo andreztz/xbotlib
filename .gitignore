@@ -2,10 +2,11 @@
 *.pyc
 .coverage
 .eggs/
+.env
 .mypy_cache/
 .tox/
 __pycache__
+bot.conf
 build/
 dist/
 pip-wheel-metadata/
-bot.conf
