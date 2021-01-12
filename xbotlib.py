@@ -101,8 +101,8 @@ class Bot(ClientXMPP):
         self.config["bot"] = {}
         self.config["bot"]["jid"] = environ.get("XBOT_JID")
         self.config["bot"]["password"] = environ.get("XBOT_PASSWORD")
-        self.config["bot"]["room"] = environ.get("XBOT_ROOM")
-        self.config["bot"]["nick"] = environ.get("XBOT_NICK")
+        self.config["bot"]["room"] = environ.get("XBOT_ROOM", "")
+        self.config["bot"]["nick"] = environ.get("XBOT_NICK", "")
 
     def init_bot(self):
         """Initialise bot with connection details."""

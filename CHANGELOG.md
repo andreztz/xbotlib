@@ -1,5 +1,9 @@
 # xbotlib x.x.x (UNRELEASED)
 
+# xbotlib 0.3.2 (2021-01-12)
+
+- Fix config parser environment loading for missing optional variables
+
 # xbotlib 0.3.1 (2021-01-12)
 
 - Support `--no-input` flag and read configuration from the environment
