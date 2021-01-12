@@ -88,6 +88,19 @@ Attributes:
 - **nickname**: the nickname of the sender
 - **type**: the type of message (`chat` or `groupchat`)
 
+## Configure your bot
+
+### Using the environment
+
+You can pass the `--no-input` option to your script invocation (e.g. `python bot.py --no-input`).
+
+`xbotlib` will try to read the following configuration values from the environment.
+
+- **XBOT_JID**
+- **XBOT_PASSWORD**
+- **XBOT_ROOM**
+- **XBOT_NICK**
+
 ## Roadmap
 
 See the [issue tracker](https://git.autonomic.zone/decentral1se/xbotlib/issues).
