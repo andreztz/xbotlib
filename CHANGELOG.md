@@ -1,5 +1,9 @@
 # xbotlib x.x.x (UNRELEASED)
 
+# xbotlib 0.5.0 (2021-01-13)
+
+- Revert `source` -> `sender` on `SimpleMessage` as it is more clear ([cf93c07294](https://git.autonomic.zone/decentral1se/xbotlib/commit/cf93c07294d72b11d465491680f5befe882db9bf))
+
 # xbotlib 0.4.0 (2021-01-13)
 
 - Internally manage all example bots ([#11](https://git.autonomic.zone/decentral1se/xbotlib/issues/11))
