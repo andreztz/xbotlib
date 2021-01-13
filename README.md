@@ -96,10 +96,10 @@ You can pass the `--no-input` option to your script invocation (e.g. `python bot
 
 `xbotlib` will try to read the following configuration values from the environment.
 
-- **XBOT_JID**
-- **XBOT_PASSWORD**
-- **XBOT_ROOM**
-- **XBOT_NICK**
+- **XBOT_JID**: The username of the bot account
+- **XBOT_PASSWORD**: The password of the bot account
+- **XBOT_ROOM**: The room that the bot can join
+- **XBOT_NICK**: The nickname that the bot uses
 
 ## Roadmap
 
