@@ -40,20 +40,15 @@ Here's the code for the `EchoBot`.
 
 ```python
 class EchoBot(Bot):
-    """Gives back what you sent it.
+    def direct(self, message):
+        self.reply(message.body, to=message.sender)
 
-    In group chats, it responds to the following format.
-
-    echobot:foo
-    """
-    def react(self, message):
-        if message.type == "chat":
-            self.reply(message.body, to=message.sender)
-
-        if message.type == "groupchat" and "echobot" in message.body:
-            _, to_echo = message.body.split(":")
-            self.reply(to_echo, room=message.room)
+    def group(self, message):
+        if "echobot" in message.body:
+            self.reply(message.body.split(":")[-1], room=message.room)
 ```
+
+Read more in the [API reference](#api-reference) for how to write your own bots.
 
 ## All examples
 
@@ -64,37 +59,30 @@ See [xbotlib.py](./xbotlib.py) for all example bots.
 
 ## API Reference
 
-When writing your own bot, you always sub-classes the `Bot` class provided from
-`xbotlib`. All underling functions can be extended. For example, if you want to
-enable more plugins or add different functionality. If something feels awkward
-then please raise a ticket for that. Seamlessness is still a bitch but we're
-trying anyway.
+When writing your own bot, you always sub-class the `Bot` class provided from
+`xbotlib`. Then if you want to respond to a direct message, you write a
+[direct](#botdirectmessage) function. If you want to respond to a group chat
+message, you write a [group](#botgroupmessage) function.
 
-> Bot.react(message)
+### Bot.direct(message)
 
-A function which you define in your bot implementation in order to respond to
-chat messages. You can respond to both direct messages and group chat messages
-in this function by checking the `message.type` which can be either `chat` or
-`groupchat`.
+Respond to direct messages.
 
 Arguments:
 
-- **message**: sent message and metadata (see [message](#message) reference below)
+- **message**: received message (see [SimpleMessage](#simplemessage) below for available attributes)
 
-> Bot.reply(body, to=None, room=None)
+### Bot.group(message)
 
-Send back a response to a direct chat message.
+Respond to a message in a group chat.
 
 Arguments:
 
-- **body**: the message to send
-- **to**: which user account to reply to (direct chat)
-- **room**: which room to reply to (group chat)
+- **message**: received message (see [SimpleMessage](#simplemessage) below for available attributes)
 
-> SimpleMessage
+### SimpleMessage
 
-A simple message format. This is the type that you work with when your function
-accepts a `message` argument.
+A simple message interface.
 
 Attributes:
 

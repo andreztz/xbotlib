@@ -117,13 +117,13 @@ class Bot(ClientXMPP):
     def register_xmpp_event_handlers(self):
         """Register functions against specific XMPP event handlers."""
         self.add_event_handler("session_start", self.session_start)
-        self.add_event_handler("message", self.message)
-        self.add_event_handler("groupchat_message", self.groupchat_message)
+        self.add_event_handler("message", self.direct_message)
+        self.add_event_handler("groupchat_message", self.group_message)
 
-    def message(self, message):
+    def direct_message(self, message):
         """Handle message event."""
         if message["type"] in ("chat", "normal"):
-            self.react(SimpleMessage(message))
+            self.direct(SimpleMessage(message))
 
     def session_start(self, event):
         """Handle session_start event."""
@@ -136,11 +136,11 @@ class Bot(ClientXMPP):
         if room and nick:
             self.plugin["xep_0045"].join_muc(room, nick)
 
-    def groupchat_message(self, message):
+    def group_message(self, message):
         """Handle groupchat_message event."""
         if message["type"] in ("groupchat", "normal"):
             if message["mucnick"] != self.config["bot"]["nick"]:
-                self.react(SimpleMessage(message))
+                self.group(SimpleMessage(message))
 
     def register_xmpp_plugins(self):
         """Register XMPP plugins that the bot supports."""
@@ -183,47 +183,37 @@ class Bot(ClientXMPP):
 
 
 class EchoBot(Bot):
-    """Gives back what you sent it.
+    """Responds with whatever you send.
 
-    Just direct message the bot and see if you get back what you sent. It also
-    works in group chats but in this case you need to summon the bot using its
-    nickname Usually like so.
+    Simply direct message the bot and see if you get back what you sent. It
+    also works in group chats but in this case you need to summon the bot using
+    its nickname. Usually like so.
 
     echobot:foo
 
     """
 
-    def react(self, message):
-        """Send back what we get."""
-        if message.type == "chat":
-            self.reply(message.body, to=message.sender)
+    def direct(self, message):
+        """Send back whatever we receive."""
+        self.reply(message.body, to=message.sender)
 
-        if message.type == "groupchat" and "echobot" in message.body:
-            _, to_echo = message.body.split(":")
-            self.reply(to_echo, room=message.room)
+    def group(self, message):
+        """Send back whatever receive in group chats."""
+        if "echobot" in message.body:
+            self.reply(message.body.split(":")[-1], room=message.room)
 
 
 class WhisperBot(Bot):
-    """Pseudo-anonymous whispering in group chats.
+    """Anonymous whispering in group chats.
 
     In order to activate this bot you can invite it to your group chat. Once
-    invited, you can directly message the bot outside of the group chat and
-    tell it you want it to whisper your message into the group chat. The bot
-    will then do this on your behalf and not reveal your identity. This is nice
-    when you want to communicate with the group somewhat anonymously.
-
-    The bot accepts messages in the following form.
-
-    whisper:<room>:<message>
-
-    So, I might write it like so.
-
-    whisper:myroom@muc.foo.com:i love the music of avril lavigne
+    invited, you can start a private chat with the bot and tell it you want it
+    to whisper your message into the group chat. The bot will then do this on
+    your behalf and not reveal your identity. This is nice when you want to
+    communicate with the group anonymously.
 
     """
 
-    def react(self, message):
-        """Receive direct messages and pass them to group chats."""
-        if message.type == "chat" and "whisper" in message.body:
-            _, room, whisper = message.body.split(":")
-            self.reply(f"*whispers* {whisper}", room=room)
+    def direct(self, message):
+        """Receive private messages and whisper them into group chats."""
+        self.reply(f"*pssttt...* {message.body}", room=message.room)
