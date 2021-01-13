@@ -40,6 +40,12 @@ Here's the code for the `EchoBot`.
 
 ```python
 class EchoBot(Bot):
+    """Gives back what you sent it.
+
+    In group chats, it responds to the following format.
+
+    echobot:foo
+    """
     def react(self, message):
         if message.type == "chat":
             # Reply to direct messages
