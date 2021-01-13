@@ -192,7 +192,11 @@ class EchoBot(Bot):
     def react(self, message):
         """Send back what we get."""
         if message.type == "chat":
-            self.reply(message.body, to=message.sender)
+            self.reply(message.body, to=message.source)
+
+        if message.type == "groupchat" and "echobot" in message.body:
+            _, to_echo = message.body.split(":")
+            self.reply(to_echo, room=message.source)
 
 
 class WhisperBot(Bot):

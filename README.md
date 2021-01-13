@@ -22,7 +22,8 @@ $ pip install xbotlib
 
 ## Example
 
-Put the following in a `echo.py` file.
+Put the following in a `echo.py` file. `xbotlib` provides a number of example
+bots which you can use to get moving fast and try things out.
 
 ```python
 from xbotlib import EchoBot
@@ -39,20 +40,15 @@ Here's the code for the `EchoBot`.
 
 ```python
 class EchoBot(Bot):
-    """Gives back what you sent it.
-
-    Just direct message the bot and see if you get back what you sent. It also
-    works in group chats but in this case you need to summon the bot using its
-    nickname Usually like so.
-
-    echobot:foo
-
-    """
-
     def react(self, message):
-        """Send back what we get."""
         if message.type == "chat":
-            self.reply(message.body, to=message.sender)
+            # Reply to direct messages
+            self.reply(message.body, to=message.source)
+
+        if message.type == "groupchat" and "echobot" in message.body:
+            # Parse and reply group chat messages
+            _, to_echo = message.body.split(":")
+            self.reply(to_echo, room=message.source)
 ```
 
 ## All examples
