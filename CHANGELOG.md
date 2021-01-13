@@ -1,5 +1,9 @@
 # xbotlib x.x.x (UNRELEASED)
 
+# xbotlib 0.7.1 (2021-01-13)
+
+- Support logging ([#2](https://git.autonomic.zone/decentral1se/xbotlib/issues/2))
+
 # xbotlib 0.7.0 (2021-01-13)
 
 - Remove `room` as configuration and support arbitrary invite acceptance ([#15](https://git.autonomic.zone/decentral1se/xbotlib/issues/15))
