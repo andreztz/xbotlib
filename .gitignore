@@ -7,6 +7,7 @@
 .tox/
 __pycache__
 bot.conf
+bot.py
 build/
 dist/
 pip-wheel-metadata/
