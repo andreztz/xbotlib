@@ -1,5 +1,10 @@
 # xbotlib x.x.x (UNRELEASED)
 
+# xbotlib 0.4.0 (2021-01-13)
+
+- Internally manage all example bots ([#11](https://git.autonomic.zone/decentral1se/xbotlib/issues/11))
+- `EasyMessage` -> `SimpleMessage` ([1a88f7049b](https://git.autonomic.zone/decentral1se/xbotlib/commit/1a88f7049b2cc6b6bc76efbcbb6e281b1d1227ff))
+
 # xbotlib 0.3.2 (2021-01-12)
 
 - Fix config parser environment loading for missing optional variables ([f909d43c59](https://git.autonomic.zone/decentral1se/xbotlib/commit/f909d43c591c011c9baf8cb967777b744cb6b566))
