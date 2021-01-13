@@ -48,7 +48,7 @@ class EchoBot(Bot):
         if message.type == "groupchat" and "echobot" in message.body:
             # Parse and reply group chat messages
             _, to_echo = message.body.split(":")
-            self.reply(to_echo, room=message.source)
+            self.reply(to_echo, room=message.room)
 ```
 
 ## All examples
