@@ -21,7 +21,7 @@ class SimpleMessage:
         return self.message["body"]
 
     @property
-    def source(self):
+    def sender(self):
         return self.message["from"]
 
     @property
@@ -196,7 +196,7 @@ class EchoBot(Bot):
     def react(self, message):
         """Send back what we get."""
         if message.type == "chat":
-            self.reply(message.body, to=message.source)
+            self.reply(message.body, to=message.sender)
 
         if message.type == "groupchat" and "echobot" in message.body:
             _, to_echo = message.body.split(":")

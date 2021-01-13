@@ -48,11 +48,9 @@ class EchoBot(Bot):
     """
     def react(self, message):
         if message.type == "chat":
-            # Reply to direct messages
-            self.reply(message.body, to=message.source)
+            self.reply(message.body, to=message.sender)
 
         if message.type == "groupchat" and "echobot" in message.body:
-            # Parse and reply group chat messages
             _, to_echo = message.body.split(":")
             self.reply(to_echo, room=message.room)
 ```
@@ -101,7 +99,8 @@ accepts a `message` argument.
 Attributes:
 
 - **body**: the body of the message
-- **source**: where the message came from (can be a user or a room)
+- **sender**: the user the message came from
+- **room**: the room the message came from
 - **receiver**: the receiver of the message
 - **nickname**: the nickname of the sender
 - **type**: the type of message (`chat` or `groupchat`)
