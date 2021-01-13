@@ -21,7 +21,7 @@ class SimpleMessage:
         return self.message["body"]
 
     @property
-    def sender(self):
+    def source(self):
         return self.message["from"].bare
 
     @property

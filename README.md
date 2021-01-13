@@ -99,8 +99,8 @@ accepts a `message` argument.
 Attributes:
 
 - **body**: the body of the message
-- **sender**: the sender of the message
-- **receive**: the receive of the message
+- **source**: where the message came from (can be a user or a room)
+- **receiver**: the receiver of the message
 - **nickname**: the nickname of the sender
 - **type**: the type of message (`chat` or `groupchat`)
 
