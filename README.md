@@ -25,14 +25,9 @@ $ pip install xbotlib
 Put the following in a `echo.py` file.
 
 ```python
-from xbotlib import Bot
+from xbotlib import EchoBot
 
-class EchoBot(Bot):
-    def react(self, message):
-        if message.type == "chat":
-          self.reply(message.body, to=message.sender)
-
-MyBot()
+EchotBot()
 ```
 
 And then `python echo.py`. You will be asked a few questions like which account
@@ -40,19 +35,40 @@ details your bot will be using.
 
 This will generate a `bot.conf` file in the same working directory for further use.
 
-## More Examples
+Here's the code for the `EchoBot`.
 
-- **[EchoBot](./examples/echo.py)**: Sends back what you sent it
-- **[WhisperBot](./examples/whisper.py)**: Pseudo-anonymous whispering in group chats
+```python
+class EchoBot(Bot):
+    """Gives back what you sent it.
 
-See the [examples](./examples/) directoy for all listings.
+    Just direct message the bot and see if you get back what you sent. It also
+    works in group chats but in this case you need to summon the bot using its
+    nickname Usually like so.
+
+    echobot:foo
+
+    """
+
+    def react(self, message):
+        """Send back what we get."""
+        if message.type == "chat":
+            self.reply(message.body, to=message.sender)
+```
+
+## All examples
+
+- **EchoBot**: Sends back what you sent it
+- **WhisperBot**: Pseudo-anonymous whispering in group chats
+
+See [xbotlib.py](./xbotlib.py) for all example bots.
 
 ## API Reference
 
-Your bot always sub-classes the `Bot` class provided from `xbotlib`. All
-underling functions can be extended. For example, if you want to enable more
-plugins or add different functionality. If something feels awkward then please
-raise a ticket for that. Seamlessness is still a bitch but we're trying anyway.
+When writing your own bot, you always sub-classes the `Bot` class provided from
+`xbotlib`. All underling functions can be extended. For example, if you want to
+enable more plugins or add different functionality. If something feels awkward
+then please raise a ticket for that. Seamlessness is still a bitch but we're
+trying anyway.
 
 > Bot.react(message)
 

@@ -176,3 +176,46 @@ class Bot(ClientXMPP):
     def react(self, message):
         message = "You need to write your own `react` implementation"
         raise NotImplementedError(message)
+
+
+class EchoBot(Bot):
+    """Gives back what you sent it.
+
+    Just direct message the bot and see if you get back what you sent. It also
+    works in group chats but in this case you need to summon the bot using its
+    nickname Usually like so.
+
+    echobot:foo
+
+    """
+
+    def react(self, message):
+        """Send back what we get."""
+        if message.type == "chat":
+            self.reply(message.body, to=message.sender)
+
+
+class WhisperBot(Bot):
+    """Pseudo-anonymous whispering in group chats.
+
+    In order to activate this bot you can invite it to your group chat. Once
+    invited, you can directly message the bot outside of the group chat and
+    tell it you want it to whisper your message into the group chat. The bot
+    will then do this on your behalf and not reveal your identity. This is nice
+    when you want to communicate with the group somewhat anonymously.
+
+    The bot accepts messages in the following form.
+
+    whisper:<room>:<message>
+
+    So, I might write it like so.
+
+    whisper:myroom@muc.foo.com:i love the music of avril lavigne
+
+    """
+
+    def react(self, message):
+        """Receive direct messages and pass them to group chats."""
+        if message.type == "chat" and "whisper" in message.body:
+            _, room, whisper = message.body.split(":")
+            self.reply(f"*whispers* {whisper}", room=room)
