@@ -1,5 +1,11 @@
 # xbotlib x.x.x (UNRELEASED)
 
+# xbotlib 0.4.1 (2021-01-13)
+
+- Change `sender` to `source` on `SimpleMessage` to reflect user/room behaviour ([e0c8583b2d](https://git.autonomic.zone/decentral1se/xbotlib/commit/e0c8583b2d592d5b6668fea1ba0d7b4ffcba5600))
+- Make `EchoBot` support group chats ([1137624180](https://git.autonomic.zone/decentral1se/xbotlib/commit/11376241808c967a83d6587e9d9acd21e808c3cf))
+- Add additional `room` attribute to `SimpleMessage` ([deca260a67](https://git.autonomic.zone/decentral1se/xbotlib/commit/deca260a6705c18fab899149cb1817c050dcada8))
+
 # xbotlib 0.4.0 (2021-01-13)
 
 - Internally manage all example bots ([#11](https://git.autonomic.zone/decentral1se/xbotlib/issues/11))
