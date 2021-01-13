@@ -22,6 +22,10 @@ class SimpleMessage:
 
     @property
     def source(self):
+        return self.message["from"]
+
+    @property
+    def room(self):
         return self.message["from"].bare
 
     @property
@@ -196,7 +200,7 @@ class EchoBot(Bot):
 
         if message.type == "groupchat" and "echobot" in message.body:
             _, to_echo = message.body.split(":")
-            self.reply(to_echo, room=message.source)
+            self.reply(to_echo, room=message.room)
 
 
 class WhisperBot(Bot):
