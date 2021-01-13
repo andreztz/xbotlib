@@ -10,7 +10,7 @@ from pathlib import Path
 from slixmpp import ClientXMPP
 
 
-class EasyMessage:
+class SimpleMessage:
     """A simple message interface."""
 
     def __init__(self, message):
@@ -119,7 +119,7 @@ class Bot(ClientXMPP):
     def message(self, message):
         """Handle message event."""
         if message["type"] in ("chat", "normal"):
-            self.react(EasyMessage(message))
+            self.react(SimpleMessage(message))
 
     def session_start(self, event):
         """Handle session_start event."""
@@ -136,7 +136,7 @@ class Bot(ClientXMPP):
         """Handle groupchat_message event."""
         if message["type"] in ("groupchat", "normal"):
             if message["mucnick"] != self.config["bot"]["nick"]:
-                self.react(EasyMessage(message))
+                self.react(SimpleMessage(message))
 
     def register_xmpp_plugins(self):
         """Register XMPP plugins that the bot supports."""

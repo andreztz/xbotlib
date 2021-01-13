@@ -75,7 +75,7 @@ Arguments:
 - **to**: which user account to reply to (direct chat)
 - **room**: which room to reply to (group chat)
 
-> EasyMessage
+> SimpleMessage
 
 A simple message format. This is the type that you work with when your function
 accepts a `message` argument.
