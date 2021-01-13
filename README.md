@@ -103,7 +103,6 @@ You can pass the `--no-input` option to your script invocation (e.g. `python bot
 
 - **XBOT_JID**: The username of the bot account
 - **XBOT_PASSWORD**: The password of the bot account
-- **XBOT_ROOM**: The room that the bot can join
 - **XBOT_NICK**: The nickname that the bot uses
 
 ## Roadmap

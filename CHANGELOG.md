@@ -1,5 +1,9 @@
 # xbotlib x.x.x (UNRELEASED)
 
+# xbotlib 0.7.0 (2021-01-13)
+
+- Remove `room` as configuration and support arbitrary invite acceptance ([#15](https://git.autonomic.zone/decentral1se/xbotlib/issues/15))
+
 # xbotlib 0.6.0 (2021-01-13)
 
 - Implement direct/group API ([#13](https://git.autonomic.zone/decentral1se/xbotlib/issues/13))

@@ -86,14 +86,11 @@ class Bot(ClientXMPP):
         password = (
             getpass("Password (e.g. my-cool-password): ") or "my-cool-password"
         )
-        room = input("XMPP room (e.g. foo@muc.bar.com): ")
         nick = input("Nickname (e.g. lurkbot): ")
 
         config = ConfigParser()
         config["bot"] = {"jid": jid, "password": password}
 
-        if room:
-            config["bot"]["room"] = room
         if nick:
             config["bot"]["nick"] = nick
 
@@ -105,7 +102,6 @@ class Bot(ClientXMPP):
         self.config["bot"] = {}
         self.config["bot"]["jid"] = environ.get("XBOT_JID")
         self.config["bot"]["password"] = environ.get("XBOT_PASSWORD")
-        self.config["bot"]["room"] = environ.get("XBOT_ROOM", "")
         self.config["bot"]["nick"] = environ.get("XBOT_NICK", "")
 
     def init_bot(self):
@@ -117,6 +113,7 @@ class Bot(ClientXMPP):
     def register_xmpp_event_handlers(self):
         """Register functions against specific XMPP event handlers."""
         self.add_event_handler("session_start", self.session_start)
+        self.add_event_handler("groupchat_invite", self.group_invite)
         self.add_event_handler("message", self.direct_message)
         self.add_event_handler("groupchat_message", self.group_message)
 
@@ -125,16 +122,16 @@ class Bot(ClientXMPP):
         if message["type"] in ("chat", "normal"):
             self.direct(SimpleMessage(message))
 
-    def session_start(self, event):
+    def session_start(self, message):
         """Handle session_start event."""
         self.send_presence()
         self.get_roster()
 
-        room = self.config["bot"].get("room")
-        nick = self.config["bot"].get("nick")
-
-        if room and nick:
-            self.plugin["xep_0045"].join_muc(room, nick)
+    def group_invite(self, message):
+        """Accept invites to group chats."""
+        self.plugin["xep_0045"].join_muc(
+            message["from"], self.config["bot"]["nick"]
+        )
 
     def group_message(self, message):
         """Handle groupchat_message event."""
