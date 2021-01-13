@@ -3,6 +3,7 @@
 from argparse import ArgumentParser, BooleanOptionalAction
 from configparser import ConfigParser
 from getpass import getpass
+from logging import DEBUG, INFO, basicConfig
 from os import environ
 from os.path import exists
 from pathlib import Path
@@ -46,6 +47,7 @@ class Bot(ClientXMPP):
 
     def __init__(self):
         self.parse_arguments()
+        self.setup_logging()
         self.read_config()
         self.init_bot()
         self.register_xmpp_event_handlers()
@@ -61,7 +63,22 @@ class Bot(ClientXMPP):
             action=BooleanOptionalAction,
             default=True,
         )
+        self.parser.add_argument(
+            "-d",
+            "--debug",
+            help="Set logging to DEBUG",
+            action="store_const",
+            dest="log_level",
+            const=DEBUG,
+            default=INFO,
+        )
         self.args = self.parser.parse_args()
+
+    def setup_logging(self):
+        """Arrange logging for the bot."""
+        basicConfig(
+            level=self.args.log_level, format="%(levelname)-8s %(message)s"
+        )
 
     def read_config(self):
         """Read configuration for running bot."""
