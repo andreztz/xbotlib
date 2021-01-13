@@ -4,7 +4,7 @@ build-backend = "poetry.masonry.api"
 
 [tool.poetry]
 name = "xbotlib"
-version = "0.7.0"
+version = "0.7.1"
 description = "XMPP bots for humans"
 authors = ["decentral1se <lukewm@riseup.net>"]
 maintainers = ["decentral1se <lukewm@riseup.net>"]
