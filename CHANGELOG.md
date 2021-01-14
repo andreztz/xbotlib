@@ -1,5 +1,9 @@
 # xbotlib x.x.x (UNRELEASED)
 
+# xbotlib 0.8.0 (2021-01-14)
+
+- Support not providing response implementation ([#18](https://git.autonomic.zone/decentral1se/xbotlib/issues/18))
+
 # xbotlib 0.7.1 (2021-01-13)
 
 - Support logging ([#2](https://git.autonomic.zone/decentral1se/xbotlib/issues/2))

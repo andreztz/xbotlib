@@ -138,7 +138,10 @@ class Bot(ClientXMPP):
     def direct_message(self, message):
         """Handle message event."""
         if message["type"] in ("chat", "normal"):
-            self.direct(SimpleMessage(message))
+            try:
+                self.direct(SimpleMessage(message))
+            except AttributeError:
+                self.log.info("Bot.direct not implemented")
 
     def session_start(self, message):
         """Handle session_start event."""
@@ -155,7 +158,10 @@ class Bot(ClientXMPP):
         """Handle groupchat_message event."""
         if message["type"] in ("groupchat", "normal"):
             if message["mucnick"] != self.config["bot"]["nick"]:
-                self.group(SimpleMessage(message))
+                try:
+                    self.group(SimpleMessage(message))
+                except AttributeError:
+                    self.log.info("Bot.group not implemented")
 
     def register_xmpp_plugins(self):
         """Register XMPP plugins that the bot supports."""
