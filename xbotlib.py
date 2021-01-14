@@ -3,7 +3,7 @@
 from argparse import ArgumentParser, BooleanOptionalAction
 from configparser import ConfigParser
 from getpass import getpass
-from logging import DEBUG, INFO, basicConfig
+from logging import DEBUG, INFO, basicConfig, getLogger
 from os import environ
 from os.path import exists
 from pathlib import Path
@@ -79,6 +79,7 @@ class Bot(ClientXMPP):
         basicConfig(
             level=self.args.log_level, format="%(levelname)-8s %(message)s"
         )
+        self.log = getLogger(__name__)
 
     def read_config(self):
         """Read configuration for running bot."""
