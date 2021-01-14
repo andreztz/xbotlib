@@ -53,7 +53,7 @@ Read more in the [API reference](#api-reference) for how to write your own bots.
 ## All examples
 
 - **EchoBot**: Sends back what you sent it
-- **WhisperBot**: Pseudo-anonymous whispering in group chats
+- **WhisperBot**: Anonymous whispering in group chats
 
 See [xbotlib.py](./xbotlib.py) for all example bots.
 
