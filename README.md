@@ -95,6 +95,20 @@ Attributes:
 - **nickname**: the nickname of the sender
 - **type**: the type of message (`chat` or `groupchat`)
 
+## Documenting your bot
+
+Add a `help = "my help"` to your `Bot` class like so.
+
+```python
+class MyBot(Bot):
+    help = "My help"
+```
+
+The bot will then respond to:
+
+- `!uptime` commands in direct messages
+- `<nick>:!uptime` commands in group chats (use your own nick)
+
 ## Configure your bot
 
 All the ways you can pass configuration details to your bot.

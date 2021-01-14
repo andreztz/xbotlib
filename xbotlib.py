@@ -2,6 +2,7 @@
 
 from argparse import ArgumentParser
 from configparser import ConfigParser
+from datetime import datetime as dt
 from getpass import getpass
 from logging import DEBUG, INFO, basicConfig, getLogger
 from os import environ
@@ -9,6 +10,7 @@ from os.path import exists
 from pathlib import Path
 from sys import exit, stdout
 
+from humanize import naturaldelta
 from slixmpp import ClientXMPP
 
 
@@ -69,6 +71,8 @@ class Bot(ClientXMPP):
 
     def __init__(self):
         self.name = type(self).__name__.lower()
+        self.start = dt.now()
+
         self.CONFIG_FILE = f"{self.name}.conf"
 
         self.parse_arguments()
@@ -191,8 +195,14 @@ class Bot(ClientXMPP):
     def direct_message(self, message):
         """Handle message event."""
         if message["type"] in ("chat", "normal"):
+            _message = SimpleMessage(message)
+
+            if _message.body.startswith("!"):
+                self.command(_message, to=_message.sender)
+                return
+
             try:
-                self.direct(SimpleMessage(message))
+                self.direct(_message)
             except AttributeError:
                 self.log.info("Bot.direct not implemented")
 
@@ -209,8 +219,14 @@ class Bot(ClientXMPP):
         """Handle groupchat_message event."""
         if message["type"] in ("groupchat", "normal"):
             if message["mucnick"] != self.config.nick:
+                _message = SimpleMessage(message)
+
+                if f"{self.nick}:!" in _message.body:
+                    self.command(_message, room=_message.room)
+                    return
+
                 try:
-                    self.group(SimpleMessage(message))
+                    self.group(_message)
                 except AttributeError:
                     self.log.info("Bot.group not implemented")
 
@@ -249,6 +265,25 @@ class Bot(ClientXMPP):
 
         self.send_message(**kwargs)
 
+    @property
+    def uptime(self):
+        """Time since the bot came up."""
+        return naturaldelta(self.start - dt.now())
+
+    def command(self, message, **kwargs):
+        """Handle "!" style commands with built-in responses."""
+        command = message.body.split("!")[-1]
+
+        if command == "uptime":
+            self.reply(self.uptime, **kwargs)
+        elif command == "help":
+            try:
+                self.reply(self.help, **kwargs)
+            except AttributeError:
+                self.reply("No help found 🤔️", **kwargs)
+        else:
+            self.log.error(f"'{command}' direct command is not recognised")
+
 
 class EchoBot(Bot):
     """Responds with whatever you send.
@@ -260,6 +295,8 @@ class EchoBot(Bot):
     echobot:foo
 
     """
+
+    help = "I echo back whatever you send to me 🖖️"
 
     def direct(self, message):
         """Send back whatever we receive."""
@@ -281,6 +318,8 @@ class WhisperBot(Bot):
     communicate with the group anonymously.
 
     """
+
+    help = "I whisper your private messages into group chats 😌️"
 
     def direct(self, message):
         """Receive private messages and whisper them into group chats."""
