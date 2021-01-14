@@ -1,12 +1,13 @@
 """XMPP bots for humans."""
 
-from argparse import ArgumentParser, BooleanOptionalAction
+from argparse import ArgumentParser
 from configparser import ConfigParser
 from getpass import getpass
 from logging import DEBUG, INFO, basicConfig, getLogger
 from os import environ
 from os.path import exists
 from pathlib import Path
+from sys import exit, stdout
 
 from slixmpp import ClientXMPP
 
@@ -42,7 +43,29 @@ class SimpleMessage:
         return self.message["type"]
 
 
+class Config:
+    """Bot file configuration."""
+
+    def __init__(self, config):
+        self.config = config
+        self.section = config["bot"] if "bot" in config else {}
+
+    @property
+    def account(self):
+        return self.section.get("account", None)
+
+    @property
+    def password(self):
+        return self.section.get("password", None)
+
+    @property
+    def nick(self):
+        return self.section.get("nick", None)
+
+
 class Bot(ClientXMPP):
+    """XMPP bots for humans."""
+
     CONFIG_FILE = "bot.conf"
 
     def __init__(self):
@@ -56,22 +79,36 @@ class Bot(ClientXMPP):
 
     def parse_arguments(self):
         """Parse command-line arguments."""
-        self.parser = ArgumentParser()
-        self.parser.add_argument(
-            "--input",
-            help="Read configuration from environment",
-            action=BooleanOptionalAction,
-            default=True,
-        )
+        self.parser = ArgumentParser(description="XMPP bots for humans")
+
         self.parser.add_argument(
             "-d",
             "--debug",
-            help="Set logging to DEBUG",
+            help="Enable verbose debug logs",
             action="store_const",
             dest="log_level",
             const=DEBUG,
             default=INFO,
         )
+        self.parser.add_argument(
+            "-a",
+            "--account",
+            dest="account",
+            help="Account for the bot account (foo@example.com)",
+        )
+        self.parser.add_argument(
+            "-p",
+            "--password",
+            dest="password",
+            help="Password for the bot account",
+        )
+        self.parser.add_argument(
+            "-n",
+            "--nick",
+            dest="nick",
+            help="Nickname for the bot account",
+        )
+
         self.args = self.parser.parse_args()
 
     def setup_logging(self):
@@ -83,31 +120,26 @@ class Bot(ClientXMPP):
 
     def read_config(self):
         """Read configuration for running bot."""
-        self.config = ConfigParser()
+        config = ConfigParser()
 
         config_file_path = Path(self.CONFIG_FILE).absolute()
-        if not exists(config_file_path) and self.args.input:
+
+        if not exists(config_file_path) and stdout.isatty():
             self.generate_config_interactively()
 
         if exists(config_file_path):
-            self.config.read(config_file_path)
+            config.read(config_file_path)
 
-        if self.args.input is False:
-            self.read_config_from_env()
-
-        if "bot" not in self.config:
-            raise RuntimeError("Failed to configure bot")
+        self.config = Config(config)
 
     def generate_config_interactively(self):
         """Generate bot configuration."""
-        jid = input("XMPP address (e.g. foo@bar.com): ") or "foo@bar.com"
-        password = (
-            getpass("Password (e.g. my-cool-password): ") or "my-cool-password"
-        )
-        nick = input("Nickname (e.g. lurkbot): ")
+        account = input("Account: ")
+        password = getpass("Password: ")
+        nick = input("Nickname: ")
 
         config = ConfigParser()
-        config["bot"] = {"jid": jid, "password": password}
+        config["bot"] = {"account": account, "password": password}
 
         if nick:
             config["bot"]["nick"] = nick
@@ -115,18 +147,37 @@ class Bot(ClientXMPP):
         with open("bot.conf", "w") as file_handle:
             config.write(file_handle)
 
-    def read_config_from_env(self):
-        """Read configuration from the environment."""
-        self.config["bot"] = {}
-        self.config["bot"]["jid"] = environ.get("XBOT_JID")
-        self.config["bot"]["password"] = environ.get("XBOT_PASSWORD")
-        self.config["bot"]["nick"] = environ.get("XBOT_NICK", "")
-
     def init_bot(self):
         """Initialise bot with connection details."""
-        jid = self.config["bot"]["jid"]
-        password = self.config["bot"]["password"]
-        ClientXMPP.__init__(self, jid, password)
+        account = (
+            self.args.account
+            or self.config.account
+            or environ.get("XBOT_ACCOUNT", None)
+        )
+        password = (
+            self.args.password
+            or self.config.password
+            or environ.get("XBOT_PASSWORD", None)
+        )
+        nick = (
+            self.args.nick or self.config.nick or environ.get("XBOT_NICK", None)
+        )
+
+        if not account:
+            self.log.error("Unable to discover account")
+            exit(1)
+        if not password:
+            self.log.error("Unable to discover password")
+            exit(1)
+        if not nick:
+            self.log.error("Unable to discover nick")
+            exit(1)
+
+        ClientXMPP.__init__(self, account, password)
+
+        self.account = account
+        self.password = password
+        self.nick = nick
 
     def register_xmpp_event_handlers(self):
         """Register functions against specific XMPP event handlers."""
@@ -150,14 +201,12 @@ class Bot(ClientXMPP):
 
     def group_invite(self, message):
         """Accept invites to group chats."""
-        self.plugin["xep_0045"].join_muc(
-            message["from"], self.config["bot"]["nick"]
-        )
+        self.plugin["xep_0045"].join_muc(message["from"], self.config.nick)
 
     def group_message(self, message):
         """Handle groupchat_message event."""
         if message["type"] in ("groupchat", "normal"):
-            if message["mucnick"] != self.config["bot"]["nick"]:
+            if message["mucnick"] != self.config.nick:
                 try:
                     self.group(SimpleMessage(message))
                 except AttributeError:

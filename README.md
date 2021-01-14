@@ -22,8 +22,10 @@ $ pip install xbotlib
 
 ## Example
 
-Put the following in a `echo.py` file. `xbotlib` provides a number of example
-bots which you can use to get moving fast and try things out.
+Put the following in a `echo.py` file.
+
+`xbotlib` provides a number of example bots which you can use to get moving
+fast and try things out.
 
 ```python
 from xbotlib import EchoBot
@@ -31,10 +33,10 @@ from xbotlib import EchoBot
 EchotBot()
 ```
 
-And then `python echo.py`. You will be asked a few questions like which account
-details your bot will be using.
-
-This will generate a `bot.conf` file in the same working directory for further use.
+And then `python echo.py`. You will be asked a few questions in order to load
+the account details that your bot will be using. This will generate a
+`bot.conf` file in the same working directory for further use. See the
+[configuration](#configure-your-bot) section for more.
 
 Here's the code for the `EchoBot`.
 
@@ -95,15 +97,29 @@ Attributes:
 
 ## Configure your bot
 
+All the ways you can pass configuration details to your bot.
+
+### Using the bot.conf
+
+If you run simply run your Python script which contains the bot then `xbotlib`
+will generate a configuration for you by asking a few questions. This is the
+simplest way to run your bot locally.
+
+### Using the command-line interface
+
+Every bot accepts a number of comand-line arguments to load configuration. You
+can use the `--help` option to see what is available (e.g. `python bot.py --help`).
+
 ### Using the environment
 
-You can pass the `--no-input` option to your script invocation (e.g. `python bot.py --no-input`).
+`xbotlib` will try to read the following configuration values from the
+environment if it cannot read them from a configuration file or the
+command-line interface. This can be useful when doing remote server
+deployments.
 
-`xbotlib` will try to read the following configuration values from the environment.
-
-- **XBOT_JID**: The username of the bot account
-- **XBOT_PASSWORD**: The password of the bot account
-- **XBOT_NICK**: The nickname that the bot uses
+- **XBOT_ACCOUNT**: The bot account
+- **XBOT_PASSWORD**: The bot password
+- **XBOT_NICK**: The bot nickname
 
 ## Roadmap
 
