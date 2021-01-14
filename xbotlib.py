@@ -46,9 +46,10 @@ class SimpleMessage:
 class Config:
     """Bot file configuration."""
 
-    def __init__(self, config):
+    def __init__(self, name, config):
+        self.name = name
         self.config = config
-        self.section = config["bot"] if "bot" in config else {}
+        self.section = config[self.name] if self.name in config else {}
 
     @property
     def account(self):
@@ -66,9 +67,10 @@ class Config:
 class Bot(ClientXMPP):
     """XMPP bots for humans."""
 
-    CONFIG_FILE = "bot.conf"
-
     def __init__(self):
+        self.name = type(self).__name__.lower()
+        self.CONFIG_FILE = f"{self.name}.conf"
+
         self.parse_arguments()
         self.setup_logging()
         self.read_config()
@@ -130,7 +132,7 @@ class Bot(ClientXMPP):
         if exists(config_file_path):
             config.read(config_file_path)
 
-        self.config = Config(config)
+        self.config = Config(self.name, config)
 
     def generate_config_interactively(self):
         """Generate bot configuration."""
@@ -139,12 +141,12 @@ class Bot(ClientXMPP):
         nick = input("Nickname: ")
 
         config = ConfigParser()
-        config["bot"] = {"account": account, "password": password}
+        config[self.name] = {"account": account, "password": password}
 
         if nick:
-            config["bot"]["nick"] = nick
+            config[self.name]["nick"] = nick
 
-        with open("bot.conf", "w") as file_handle:
+        with open(self.CONFIG_FILE, "w") as file_handle:
             config.write(file_handle)
 
     def init_bot(self):

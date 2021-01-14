@@ -6,6 +6,7 @@
 - Arrange precedence logic for config loading ([#14](https://git.autonomic.zone/decentral1se/xbotlib/issues/14))
 - Remove `--no-input` option and detect it automatically ([#14](https://git.autonomic.zone/decentral1se/xbotlib/issues/14))
 - Refer to `jid` as `account` from now on both internally and externally ([#14](https://git.autonomic.zone/decentral1se/xbotlib/issues/14))
+- `bot.conf` -> `$name.conf` ([#3](https://git.autonomic.zone/decentral1se/xbotlib/issues/3))
 
 # xbotlib 0.7.1 (2021-01-13)
 

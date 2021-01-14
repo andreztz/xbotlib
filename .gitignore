@@ -6,8 +6,8 @@
 .mypy_cache/
 .tox/
 __pycache__
-bot.conf
-bot.py
+*.conf
+echobot.py
 build/
 dist/
 pip-wheel-metadata/
