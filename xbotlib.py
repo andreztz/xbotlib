@@ -232,12 +232,12 @@ class Bot(ClientXMPP):
     def reply(self, body, to=None, room=None):
         """Send back a reply."""
         if to is None and room is None:
-            message = "`to` or `room` arguments required for `reply`"
-            raise RuntimeError(message)
+            self.log("`to` or `room` arguments required for `reply`")
+            exit(1)
 
         if to is not None and room is not None:
-            message = "Cannot send to both `to` and `room` for `reply`"
-            raise RuntimeError(message)
+            self.log.error("Cannot send to both `to` and `room` for `reply`")
+            exit(1)
 
         kwargs = {"mbody": body}
         if to is not None:
