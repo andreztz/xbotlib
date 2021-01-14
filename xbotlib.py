@@ -192,10 +192,6 @@ class Bot(ClientXMPP):
 
         self.send_message(**kwargs)
 
-    def react(self, message):
-        message = "You need to write your own `react` implementation"
-        raise NotImplementedError(message)
-
 
 class EchoBot(Bot):
     """Responds with whatever you send.
