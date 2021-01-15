@@ -119,6 +119,10 @@ here are the supported commands.
 - **!uptime**: how long the bot has been running
 - **!help**: the end-user provided help text of what the bot does
 
+There are also more general status commands which all bots respond to.
+
+- **/bots**: status check on who is a bot in the group chat
+
 ## Avatars
 
 By default, `xbotlib` will look for an `avatar.png` (so far tested with `.png`
