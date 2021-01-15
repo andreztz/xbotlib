@@ -320,6 +320,8 @@ class Bot(ClientXMPP):
                 self.reply(self.help, **kwargs)
             except AttributeError:
                 self.reply("No help found 🤔️", **kwargs)
+        elif command == "bots" and "room" in kwargs:
+            self.reply("o/", **kwargs)
         else:
             self.log.error(f"'{command}' direct command is not recognised")
 

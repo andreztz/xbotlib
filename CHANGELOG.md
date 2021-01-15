@@ -1,5 +1,9 @@
 # xbotlib x.x.x (UNRELEASED)
 
+# xbotlib 0.8.2 (2021-01-15)
+
+- Add `!bots` command to summon status
+
 # xbotlib 0.8.1 (2021-01-15)
 
 - Support avatars ([#17](https://git.autonomic.zone/decentral1se/xbotlib/issues/17))
