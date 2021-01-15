@@ -14,6 +14,10 @@ goal is to make writing and running XMPP bots easy and fun. `xbotlib` is a
 extended. It provides a small API surface which reflects the `slixmpp` way of
 doing things.
 
+The `xbotlib` source code and ideas are largely
+borrowed/stolen/adapted/reimagined from the XMPP bot experiments that have gone
+on and are still going on in [Varia](https://varia.zone/).
+
 ## Install
 
 ```sh
