@@ -341,8 +341,6 @@ class Bot(ClientXMPP):
                 self.reply(self.help, **kwargs)
             except AttributeError:
                 self.reply("No help found 🤔️", **kwargs)
-        else:
-            self.log.error(f"'{command}' command is not recognised")
 
     def meta(self, message, **kwargs):
         """Handle "/" style commands with built-in responses."""
@@ -350,8 +348,6 @@ class Bot(ClientXMPP):
 
         if command == "bots":
             self.reply("🖐️", **kwargs)
-        else:
-            self.log.error(f"'{command}' command is not recognised")
 
 
 class EchoBot(Bot):
