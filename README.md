@@ -35,7 +35,7 @@ EchotBot()
 
 And then `python echo.py`. You will be asked a few questions in order to load
 the account details that your bot will be using. This will generate a
-`bot.conf` file in the same working directory for further use. See the
+`echobot.conf` file in the same working directory for further use. See the
 [configuration](#configure-your-bot) section for more.
 
 Here's the code for the `EchoBot`.
@@ -104,23 +104,29 @@ class MyBot(Bot):
     help = "My help"
 ```
 
-The bot will then respond to:
+See more in the [commands](#commands) section on how to use this.
 
-- `!uptime` commands in direct messages
-- `<nick>:!uptime` commands in group chats (use your own nick)
+## Commands
+
+Using `!<command>` in direct messages and `<nick>:!<command>` in group chats,
+here are the supported commands.
+
+- **!uptime**: how long the bot has been running
+- **!help**: the end-user provided help text of what the bot does
 
 ## Avatars
 
-By default, `xbotlib` will look for an `avatar.png` file alongside your Python
-script which contains your bot implementation. You can also specify another
-path using the `--avatar` option on the command-line interface. The images
-should ideally have a height of `64` and a width of `64` pixels each.
+By default, `xbotlib` will look for an `avatar.png` (so far tested with `.png`
+but other file types may work) file alongside your Python script which contains
+your bot implementation. You can also specify another path using the `--avatar`
+option on the command-line interface. The images should ideally have a height
+of `64` and a width of `64` pixels each.
 
 ## Configure your bot
 
 All the ways you can pass configuration details to your bot.
 
-### Using the bot.conf
+### Using the `.conf` configuration file
 
 If you run simply run your Python script which contains the bot then `xbotlib`
 will generate a configuration for you by asking a few questions. This is the
