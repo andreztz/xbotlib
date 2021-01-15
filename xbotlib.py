@@ -322,7 +322,7 @@ class Bot(ClientXMPP):
         elif command == "bots" and "room" in kwargs:
             self.reply("o/", **kwargs)
         else:
-            self.log.error(f"'{command}' direct command is not recognised")
+            self.log.error(f"'{command}' command is not recognised")
 
 
 class EchoBot(Bot):
