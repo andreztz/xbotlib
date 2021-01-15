@@ -335,7 +335,7 @@ class Bot(ClientXMPP):
         command = message.body.split("/")[-1]
 
         if command == "bots":
-            self.reply(f"🖐️", **kwargs)
+            self.reply("🖐️", **kwargs)
         else:
             self.log.error(f"'{command}' command is not recognised")
 
