@@ -148,6 +148,10 @@ deployments.
 - **XBOT_PASSWORD**: The bot password
 - **XBOT_NICK**: The bot nickname
 
+## Deploy your bots
+
+See [bots.varia.zone](https://bots.varia.zone/).
+
 ## Roadmap
 
 See the [issue tracker](https://git.autonomic.zone/decentral1se/xbotlib/issues).
