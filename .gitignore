@@ -1,6 +1,7 @@
 *.conf
 *.egg-info/
 *.pyc
+.avatars
 .coverage
 .eggs/
 .env
@@ -10,5 +11,5 @@ __pycache__
 avatar.png
 build/
 dist/
-echobot.py
 pip-wheel-metadata/
+testbot.py
