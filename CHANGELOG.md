@@ -1,5 +1,10 @@
 # xbotlib x.x.x (UNRELEASED)
 
+# xbotlib 0.10.0 (2021-01-15)
+
+- Implement Redis based storage ([#21](https://git.autonomic.zone/decentral1se/xbotlib/issues/21))
+- Add `GlossBot` ([#10](https://git.autonomic.zone/decentral1se/xbotlib/issues/10))
+
 # xbotlib 0.9.0 (2021-01-15)
 
 - Re-worked `!bots` -> `/bots`
