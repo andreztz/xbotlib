@@ -199,6 +199,17 @@ optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 
 [[package]]
+name = "redis"
+version = "3.5.3"
+description = "Python client for Redis key-value store"
+category = "main"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
+
+[package.extras]
+hiredis = ["hiredis (>=0.1.3)"]
+
+[[package]]
 name = "regex"
 version = "2020.11.13"
 description = "Alternative regular expression module, to replace re."
@@ -270,7 +281,7 @@ testing = ["pytest (>=3.5,!=3.7.3)", "pytest-checkdocs (>=1.2.3)", "pytest-flake
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.6"
-content-hash = "1ff81969f837d57f7f28e6acdba690cde00aeedef64516953504c6f816ac73dd"
+content-hash = "8299a9431dce7249b4d9af08ad7f566054e4ac014dc7d648e19b0bb6e03a10c6"
 
 [metadata.files]
 aiodns = [
@@ -427,6 +438,10 @@ pycparser = [
 pyflakes = [
     {file = "pyflakes-2.2.0-py2.py3-none-any.whl", hash = "sha256:0d94e0e05a19e57a99444b6ddcf9a6eb2e5c68d3ca1e98e90707af8152c90a92"},
     {file = "pyflakes-2.2.0.tar.gz", hash = "sha256:35b2d75ee967ea93b55750aa9edbbf72813e06a66ba54438df2cfac9e3c27fc8"},
+]
+redis = [
+    {file = "redis-3.5.3-py2.py3-none-any.whl", hash = "sha256:432b788c4530cfe16d8d943a09d40ca6c16149727e4afe8c2c9d5580c59d9f24"},
+    {file = "redis-3.5.3.tar.gz", hash = "sha256:0e7e0cfca8660dea8b7d5cd8c4f6c5e29e11f31158c0b0ae91a397f00e5a05a2"},
 ]
 regex = [
     {file = "regex-2020.11.13-cp36-cp36m-macosx_10_9_x86_64.whl", hash = "sha256:8b882a78c320478b12ff024e81dc7d43c1462aa4a3341c754ee65d857a521f85"},
