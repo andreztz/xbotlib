@@ -139,6 +139,7 @@ class Bot(ClientXMPP):
         config_file_path = Path(self.CONFIG_FILE).absolute()
 
         if not exists(config_file_path) and stdout.isatty():
+            self.log.info(f"Did not find {config_file_path}")
             self.generate_config_interactively()
 
         if exists(config_file_path):
