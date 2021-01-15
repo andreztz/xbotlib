@@ -359,9 +359,7 @@ class EchoBot(Bot):
 
     Simply direct message the bot and see if you get back what you sent. It
     also works in group chats but in this case you need to summon the bot using
-    its nickname. Usually like so.
-
-    echobot:foo
+    its nickname.
 
     """
 
