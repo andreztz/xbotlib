@@ -9,9 +9,11 @@ from logging import DEBUG, INFO, basicConfig, getLogger
 from os import environ
 from os.path import exists
 from pathlib import Path
+from random import choice
 from sys import exit, stdout
 
 from humanize import naturaldelta
+from redis import Redis
 from slixmpp import ClientXMPP
 
 
@@ -82,6 +84,7 @@ class Bot(ClientXMPP):
         self.init_bot()
         self.register_xmpp_event_handlers()
         self.register_xmpp_plugins()
+        self.init_db()
         self.run()
 
     def parse_arguments(self):
@@ -281,6 +284,17 @@ class Bot(ClientXMPP):
         self.register_plugin("xep_0045")  # Multi-User Chat
         self.register_plugin("xep_0199")  # XMPP Ping
         self.register_plugin("xep_0084")  # User Avatar
+
+    def init_db(self):
+        """Initialise the Redis key/value store."""
+        url = environ.get("REDIS_URL", None)
+
+        if not url:
+            self.db = None
+            self.log.info("No storage discovered")
+        else:
+            self.db = Redis.from_url(url, decode_responses=True)
+            self.log.info("Successfully connected to storage")
 
     def run(self):
         """Run the bot."""
