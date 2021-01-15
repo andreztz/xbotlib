@@ -391,3 +391,87 @@ class WhisperBot(Bot):
     def direct(self, message):
         """Receive private messages and whisper them into group chats."""
         self.reply(f"*pssttt...* {message.body}", room=message.room)
+
+
+class GlossBot(Bot):
+    """Building a shared glossary together.
+
+    A glossary is "an alphabetical list of terms in a particular domain of
+    knowledge with the definitions for those terms."
+
+    This bot reacts to commands which insert, list or delete items from a
+    shared glossary when summoned in a group chat. This bot makes use of
+    persistent storage so the glossary is always there even if the bot goes
+    away.
+
+    """
+
+    help = """I help build a shared glossary. Here are the commands:
+
+    Add an entry:
+      glossbot:!add <entry> - <definition>
+
+    Remove an entry:
+      glossbot:!rm <entry>
+
+    Show a random entry:
+      glossbot:!rand
+
+    List all entries:
+      glossbot:!ls
+
+    """
+
+    def direct(self, message):
+        if not self.db:
+            return self.log.error("No database available")
+
+        if "!add" in message.body:
+            try:
+                _, body = message.body.split(":!add")
+                entry, definition = body.strip().split("-").strip()
+                self.add(entry, definition, to=message.sender)
+            except ValueError:
+                self.reply("Hmmm, couldn't read that", to=message.sender)
+
+        elif "!rm" in message.body:
+            try:
+                entry = message.body.split(":!rm")[-1].strip()
+                self.rm(entry, to=message.sender)
+            except ValueError:
+                self.reply("Hmmm, couldn't read that", to=message.sender)
+
+        elif "!rand" in message.body:
+            self.rand(to=message.sender)
+
+        elif "!ls" in message.body:
+            self.ls(to=message.sender)
+
+        else:
+            self.log.error(f"{message.body} is not recognised")
+
+    def add(self, entry, definition, **kwargs):
+        """Add a new entry."""
+        self.db[entry] = definition
+        self.reply("Added ✌️", **kwargs)
+
+    def rand(self, **kwargs):
+        """List a random entry."""
+        entry = choice(self.db.keys())
+        self.reply(f"{entry} - {self.db[entry]}", **kwargs)
+
+    def ls(self, **kwargs):
+        """List all entries."""
+        if not self.db.keys():
+            self.reply("Glossary is empty", **kwargs)
+
+        for entry in self.db.keys():
+            self.reply(f"{entry} - {self.db[entry]}", **kwargs)
+
+    def rm(self, entry, **kwargs):
+        """Remove an entry."""
+        try:
+            self.db[entry].delete()
+            self.reply("Removed ✌️", **kwargs)
+        except KeyError:
+            self.reply(f"{entry} doesn't exist?", **kwargs)
