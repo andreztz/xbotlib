@@ -202,6 +202,11 @@ class Bot(ClientXMPP):
         self.add_event_handler("groupchat_invite", self.group_invite)
         self.add_event_handler("message", self.direct_message)
         self.add_event_handler("groupchat_message", self.group_message)
+        self.add_event_handler("message_error", self.error_message)
+
+    def error_message(self, message):
+        _message = SimpleMessage(message)
+        self.log.error(f"Received error message: {_message.body}")
 
     def direct_message(self, message):
         """Handle message event."""
