@@ -13,7 +13,6 @@ from sys import exit, stdout
 
 from humanize import naturaldelta
 from slixmpp import ClientXMPP
-from slixmpp.exceptions import XMPPError
 
 
 class SimpleMessage:
