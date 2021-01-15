@@ -16,7 +16,8 @@ doing things.
 
 The `xbotlib` source code and ideas are largely
 borrowed/stolen/adapted/reimagined from the XMPP bot experiments that have gone
-on and are still going on in [Varia](https://varia.zone/).
+on and are still going on in
+[Varia](https://git.vvvvvvaria.org/explore/repos?tab=&sort=recentupdate&q=bots).
 
 ## Install
 
