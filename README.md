@@ -161,6 +161,31 @@ deployments.
 
 See [bots.varia.zone](https://bots.varia.zone/).
 
+## Persistent storage
+
+## Redis key/value
+
+`xbotlib` supports using [Redis](https://redis.io/) as a storage back-end. It
+is simple to work with because the interface is exactly like a dictionary. Here
+is how to quickly run Redis locally (using
+[Docker](https://docs.docker.com/engine/install/debian/)).
+
+```bash
+$ docker run --network=host --name redis -d redis
+$ export REDIS_URL=redis://localhost:6379/0
+```
+
+And you access the interface via the `self.db` attribute.
+
+```python
+def direct(self, message):
+    self.db["my-message"] = message.body
+```
+
+You should see `INFO Successfully connected to storage` when your bot
+initialises. Please see the `GlossBot` example for more on how to work with
+this type of storage.
+
 ## Roadmap
 
 See the [issue tracker](https://git.autonomic.zone/decentral1se/xbotlib/issues).
