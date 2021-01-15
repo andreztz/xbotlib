@@ -1,5 +1,9 @@
 # xbotlib x.x.x (UNRELEASED)
 
+# xbotlib 0.8.1 (2021-01-15)
+
+- Support avatars ([#17](https://git.autonomic.zone/decentral1se/xbotlib/issues/17))
+
 # xbotlib 0.8.0 (2021-01-14)
 
 - Support not providing response implementation ([#18](https://git.autonomic.zone/decentral1se/xbotlib/issues/18))

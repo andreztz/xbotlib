@@ -4,6 +4,7 @@ from argparse import ArgumentParser
 from configparser import ConfigParser
 from datetime import datetime as dt
 from getpass import getpass
+from imghdr import what
 from logging import DEBUG, INFO, basicConfig, getLogger
 from os import environ
 from os.path import exists
@@ -12,6 +13,7 @@ from sys import exit, stdout
 
 from humanize import naturaldelta
 from slixmpp import ClientXMPP
+from slixmpp.exceptions import XMPPError
 
 
 class SimpleMessage:
@@ -114,6 +116,13 @@ class Bot(ClientXMPP):
             dest="nick",
             help="Nickname for the bot account",
         )
+        self.parser.add_argument(
+            "-av",
+            "--avatar",
+            dest="avatar",
+            help="Avatar for the bot account",
+            default="avatar.png",
+        )
 
         self.args = self.parser.parse_args()
 
@@ -185,6 +194,8 @@ class Bot(ClientXMPP):
         self.password = password
         self.nick = nick
 
+        self.avatar = self.args.avatar
+
     def register_xmpp_event_handlers(self):
         """Register functions against specific XMPP event handlers."""
         self.add_event_handler("session_start", self.session_start)
@@ -210,6 +221,27 @@ class Bot(ClientXMPP):
         """Handle session_start event."""
         self.send_presence()
         self.get_roster()
+        self.publish_avatar()
+
+    def publish_avatar(self):
+        """Publish bot avatar."""
+        try:
+            abspath = Path(self.avatar).absolute()
+            with open(abspath, "rb") as handle:
+                contents = handle.read()
+        except IOError:
+            self.log.info(f"No avatar discovered (tried '{abspath}')")
+            return
+
+        id = self.plugin["xep_0084"].generate_id(contents)
+        info = {
+            "id": id,
+            "type": f"image/{what('', contents)}",
+            "bytes": len(contents),
+        }
+
+        self.plugin["xep_0084"].publish_avatar(contents)
+        self.plugin["xep_0084"].publish_avatar_metadata(items=[info])
 
     def group_invite(self, message):
         """Accept invites to group chats."""
@@ -235,6 +267,8 @@ class Bot(ClientXMPP):
         self.register_plugin("xep_0030")  # Service Discovery
         self.register_plugin("xep_0045")  # Multi-User Chat
         self.register_plugin("xep_0199")  # XMPP Ping
+
+        self.register_plugin("xep_0084")  # User Avatar
 
     def run(self):
         """Run the bot."""

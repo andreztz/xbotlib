@@ -109,6 +109,13 @@ The bot will then respond to:
 - `!uptime` commands in direct messages
 - `<nick>:!uptime` commands in group chats (use your own nick)
 
+## Avatars
+
+By default, `xbotlib` will look for an `avatar.png` file alongside your Python
+script which contains your bot implementation. You can also specify another
+path using the `--avatar` option on the command-line interface. The images
+should ideally have a height of `64` and a width of `64` pixels each.
+
 ## Configure your bot
 
 All the ways you can pass configuration details to your bot.
