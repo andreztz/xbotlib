@@ -1,5 +1,9 @@
 # xbotlib x.x.x (UNRELEASED)
 
+# xbotlib 0.9.0 (2021-01-15)
+
+- Re-worked `!bots` -> `/bots`
+
 # xbotlib 0.8.2 (2021-01-15)
 
 - Add `!bots` command to summon status

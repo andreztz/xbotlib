@@ -213,6 +213,10 @@ class Bot(ClientXMPP):
         if message["type"] in ("chat", "normal"):
             _message = SimpleMessage(message)
 
+            if _message.body.startswith("/"):
+                self.meta(_message, to=_message.sender)
+                return
+
             if _message.body.startswith("!"):
                 self.command(_message, to=_message.sender)
                 return
@@ -257,6 +261,10 @@ class Bot(ClientXMPP):
         if message["type"] in ("groupchat", "normal"):
             if message["mucnick"] != self.config.nick:
                 _message = SimpleMessage(message)
+
+                if _message.body.startswith("/"):
+                    self.meta(_message, room=_message.room)
+                    return
 
                 if f"{self.nick}:!" in _message.body:
                     self.command(_message, room=_message.room)
@@ -319,8 +327,15 @@ class Bot(ClientXMPP):
                 self.reply(self.help, **kwargs)
             except AttributeError:
                 self.reply("No help found 🤔️", **kwargs)
-        elif command == "bots" and "room" in kwargs:
-            self.reply("o/", **kwargs)
+        else:
+            self.log.error(f"'{command}' command is not recognised")
+
+    def meta(self, message, **kwargs):
+        """Handle "/" style commands with built-in responses."""
+        command = message.body.split("/")[-1]
+
+        if command == "bots":
+            self.reply(f"🖐️", **kwargs)
         else:
             self.log.error(f"'{command}' command is not recognised")
 
