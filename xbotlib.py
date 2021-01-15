@@ -422,10 +422,8 @@ class GlossBot(Bot):
 
     """
 
-    def direct(self, message):
-        if not self.db:
-            return self.log.error("No database available")
-
+    def group(self, message):
+        """Handle glossary commands"""
         if "!add" in message.body:
             try:
                 _, body = message.body.split(":!add")
