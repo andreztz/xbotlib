@@ -220,7 +220,7 @@ class Bot(ClientXMPP):
         _message = SimpleMessage(message)
 
         if "@" in _message.body:
-            self.direct_command(_message)
+            self.command(_message, to=_message.sender)
 
         try:
             self.direct(_message)
@@ -268,7 +268,7 @@ class Bot(ClientXMPP):
         _message = SimpleMessage(message)
 
         if self.nick in _message.body and "@" in _message.body:
-            self.group_command(_message, room=_message.room)
+            self.command(_message, room=_message.room)
 
         try:
             self.group(_message)
@@ -327,15 +327,15 @@ class Bot(ClientXMPP):
         """Time since the bot came up."""
         return naturaldelta(self.start - dt.now())
 
-    def direct_command(self, message):
-        """Handle commands in direct messages."""
+    def command(self, message, **kwargs):
+        """Handle command invocations."""
         if "@uptime" in message.body:
-            self.reply(self.uptime, to=message.sender)
+            self.reply(self.uptime, **kwargs)
         elif "@help" in message.body:
             try:
-                self.reply(cleandoc(self.help), to=message.sender)
+                self.reply(cleandoc(self.help), **kwargs)
             except AttributeError:
-                self.reply("No help found 🤔️", to=message.sender)
+                self.reply("No help found 🤔️", **kwargs)
         else:
             self.log.info(f"'{message.body}' not handled")
 
