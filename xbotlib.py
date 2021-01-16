@@ -293,7 +293,8 @@ class Bot(ClientXMPP):
             return
 
         if message.text.startswith("@"):
-            self.command(message, to=message.sender)
+            if self.command(message, to=message.sender):
+                return
 
         try:
             self.direct(message)
@@ -345,7 +346,8 @@ class Bot(ClientXMPP):
             return
 
         if message.content.startswith("@"):
-            self.command(message, room=message.room)
+            if self.command(message, room=message.room):
+                return
 
         try:
             self.group(message)
@@ -396,6 +398,7 @@ class Bot(ClientXMPP):
             kwargs["mtype"] = "groupchat"
 
         self.send_message(**kwargs)
+        return True
 
     @property
     def uptime(self):
@@ -405,17 +408,17 @@ class Bot(ClientXMPP):
     def meta(self, message, **kwargs):
         """Handle meta command invocations."""
         if message.text.startswith("@bots"):
-            self.reply("🖐️", **kwargs)
+            return self.reply("🖐️", **kwargs)
 
     def command(self, message, **kwargs):
         """Handle command invocations."""
         if message.content.startswith("@uptime"):
-            self.reply(self.uptime, **kwargs)
+            return self.reply(self.uptime, **kwargs)
         elif message.content.startswith("@help"):
             try:
-                self.reply(cleandoc(self.help), **kwargs)
+                return self.reply(cleandoc(self.help), **kwargs)
             except AttributeError:
-                self.reply("No help found 🤔️", **kwargs)
+                return self.reply("No help found 🤔️", **kwargs)
 
 
 class EchoBot(Bot):
