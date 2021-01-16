@@ -419,7 +419,7 @@ class GlossBot(Bot):
     """
 
     def group(self, message):
-        """Handle glossary commands"""
+        """Handle glossary commands."""
         if "!add" in message.body:
             try:
                 _, body = message.body.split(":!add")
