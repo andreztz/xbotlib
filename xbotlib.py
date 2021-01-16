@@ -1,5 +1,6 @@
 """XMPP bots for humans."""
 
+import re
 from argparse import ArgumentParser
 from configparser import ConfigParser
 from datetime import datetime as dt
@@ -21,59 +22,102 @@ from slixmpp import ClientXMPP
 class SimpleMessage:
     """A simple message interface."""
 
-    def __init__(self, message):
+    def __init__(self, message, bot):
+        """Initialise the object."""
         self.message = message
+        self.bot = bot
 
     @property
-    def body(self):
+    def text(self):
+        """The entire message text."""
         return self.message["body"]
 
     @property
+    def content(self):
+        """The content of the message received.
+
+        This implementation aims to match and extract the content of the
+        messages directed at bots in group chats. So, for example, when sending
+        messages like so.
+
+        echobot: hi
+        echobot, hi
+        echobot  hi
+
+        The result produced by `message.content` will always be "hi". This
+        makes it easier to work with various commands and avoid messy parsing
+        logic in end-user implementations.
+        """
+        body = self.message["body"]
+
+        try:
+            match = f"^{self.bot.nick}.?(\s)"
+            split = re.split(match, body)
+            filtered = list(filter(None, split))
+            return filtered[-1].strip()
+        except Exception as exception:
+            self.bot.log.error(f"Couldn't parse {body}: {exception}")
+            return None
+
+    @property
     def sender(self):
+        """The sender of the message."""
         return self.message["from"]
 
     @property
     def room(self):
+        """The room from which the message originated."""
         return self.message["from"].bare
 
     @property
     def receiver(self):
+        """The receiver of the message."""
         return self.message["to"]
 
     @property
-    def nickname(self):
-        return self.message["mucnick"]
+    def type(self):
+        """The type of the message."""
+        return self.message["type"]
 
     @property
-    def type(self):
-        return self.message["type"]
+    def nick(self):
+        """The nick of the message."""
+        return self.message["mucnick"]
 
 
 class Config:
     """Bot file configuration."""
 
     def __init__(self, name, config):
+        """Initialise the object."""
         self.name = name
         self.config = config
         self.section = config[self.name] if self.name in config else {}
 
     @property
     def account(self):
+        """The account of the bot."""
         return self.section.get("account", None)
 
     @property
     def password(self):
+        """The password of the bot account."""
         return self.section.get("password", None)
 
     @property
     def nick(self):
+        """The nickname of the bot."""
         return self.section.get("nick", None)
 
 
 class Bot(ClientXMPP):
     """XMPP bots for humans."""
 
+    DIRECT_MESSAGE_TYPES = ("chat", "normal")
+    GROUP_MESSAGE_TYPES = ("groupchat", "normal")
+
     def __init__(self):
+        """Initialise the object."""
         self.name = type(self).__name__.lower()
         self.start = dt.now()
 
@@ -209,21 +253,21 @@ class Bot(ClientXMPP):
         self.add_event_handler("message_error", self.error_message)
 
     def error_message(self, message):
-        _message = SimpleMessage(message)
-        self.log.error(f"Received error message: {_message.body}")
+        message = SimpleMessage(message, self)
+        self.log.error(f"Received error message: {message.text}")
 
     def direct_message(self, message):
-        """Handle message event."""
-        if message["type"] not in ("chat", "normal"):
+        """Handle direct message events."""
+        message = SimpleMessage(message, self)
+
+        if message.type not in self.DIRECT_MESSAGE_TYPES:
             return
 
-        _message = SimpleMessage(message)
-
-        if "@" in _message.body:
-            self.command(_message, to=_message.sender)
+        if message.text.startswith("@"):
+            self.command(message, to=message.sender)
 
         try:
-            self.direct(_message)
+            self.direct(message)
         except AttributeError:
             self.log.info(f"Bot.direct not implemented for {self.nick}")
 
@@ -258,23 +302,24 @@ class Bot(ClientXMPP):
         self.plugin["xep_0045"].join_muc(message["from"], self.config.nick)
 
     def group_message(self, message):
-        """Handle groupchat_message event."""
-        if message["type"] not in ("groupchat", "normal"):
+        """Handle group chat message events."""
+        message = SimpleMessage(message, self)
+
+        if message.text.startswith("@"):
+            return self.meta(message, room=message.room)
+
+        miss = message.type not in self.GROUP_MESSAGE_TYPES
+        loop = message.nick == self.nick
+        other = self.nick not in message.text
+
+        if miss or loop or other:
             return
 
-        if message["mucnick"] == self.config.nick:
-            return
-
-        if self.nick not in message["body"]:
-            return
-
-        _message = SimpleMessage(message)
-
-        if self.nick in _message.body and "@" in _message.body:
-            self.command(_message, room=_message.room)
+        if message.content.startswith("@"):
+            self.command(message, room=message.room)
 
         try:
-            self.group(_message)
+            self.group(message)
         except AttributeError:
             self.log.info(f"Bot.group not implemented for {self.nick}")
 
@@ -305,7 +350,7 @@ class Bot(ClientXMPP):
         except KeyboardInterrupt:
             pass
 
-    def reply(self, body, to=None, room=None):
+    def reply(self, text, to=None, room=None):
         """Send back a reply."""
         if to is None and room is None:
             self.log.error("`to` or `room` arguments required for `reply`")
@@ -315,7 +360,7 @@ class Bot(ClientXMPP):
             self.log.error("Cannot send to both `to` and `room` for `reply`")
             exit(1)
 
-        kwargs = {"mbody": body}
+        kwargs = {"mbody": text}
         if to is not None:
             kwargs["mto"] = to
             kwargs["mtype"] = "chat"
@@ -330,17 +375,22 @@ class Bot(ClientXMPP):
         """Time since the bot came up."""
         return naturaldelta(self.start - dt.now())
 
+    def meta(self, message, **kwargs):
+        """Handle meta command invocations."""
+        if message.text.startswith("@bots"):
+            self.reply("🖐️", **kwargs)
+
     def command(self, message, **kwargs):
         """Handle command invocations."""
-        if "@uptime" in message.body:
+        if message.content.startswith("@uptime"):
             self.reply(self.uptime, **kwargs)
-        elif "@help" in message.body:
+        elif message.content.startswith("@help"):
             try:
                 self.reply(cleandoc(self.help), **kwargs)
             except AttributeError:
                 self.reply("No help found 🤔️", **kwargs)
         else:
-            self.log.info(f"'{message.body}' not handled")
+            self.log.info(f"'{message.content}' not handled")
 
 
 class EchoBot(Bot):
@@ -349,18 +399,17 @@ class EchoBot(Bot):
     Simply direct message the bot and see if you get back what you sent. It
     also works in group chats but in this case you need to summon the bot using
     its nickname.
-
     """
 
     help = "I echo messages back 🖖️"
 
     def direct(self, message):
         """Send back whatever we receive."""
-        self.reply(message.body, to=message.sender)
+        self.reply(message.text, to=message.sender)
 
     def group(self, message):
         """Send back whatever receive in group chats."""
-        self.reply(message.body.split(":")[-1], room=message.room)
+        self.reply(message.text.split(":")[-1], room=message.room)
 
 
 class WhisperBot(Bot):
@@ -371,14 +420,13 @@ class WhisperBot(Bot):
     to whisper your message into the group chat. The bot will then do this on
     your behalf and not reveal your identity. This is nice when you want to
     communicate with the group anonymously.
-
     """
 
     help = "I whisper private messages into group chats 😌️"
 
     def direct(self, message):
         """Receive private messages and whisper them into group chats."""
-        self.reply(f"*pssttt...* {message.body}", room=message.room)
+        self.reply(f"*pssttt...* {message.content}", room=message.room)
 
 
 class GlossBot(Bot):
@@ -391,7 +439,6 @@ class GlossBot(Bot):
     shared glossary when summoned in a group chat. This bot makes use of
     persistent storage so the glossary is always there even if the bot goes
     away.
-
     """
 
     help = """
