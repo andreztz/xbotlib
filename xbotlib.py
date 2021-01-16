@@ -51,7 +51,7 @@ class SimpleMessage:
         body = self.message["body"]
 
         try:
-            match = f"^{self.bot.nick}.?(\s)"
+            match = fr"^{self.bot.nick}.?(\s)"
             split = re.split(match, body)
             filtered = list(filter(None, split))
             return filtered[-1].strip()
