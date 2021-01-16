@@ -238,13 +238,54 @@ class Bot(ClientXMPP):
 
     def generate_config_interactively(self):
         """Generate bot configuration."""
+        print("*" * 79)
+
+        print(
+            "Please enter the XMPP user account of your bot. ",
+            "This is often referred to as the JID (Jabbed ID). ",
+            "An example would be echobot@vvvvvvaria.org",
+            sep="\n",
+        )
         account = input("Account: ")
+
+        print("Please enter the password for your bot account")
         password = getpass("Password: ")
+
+        print("Please enter the nickname for your bot account")
         nick = input("Nickname: ")
+
+        print(
+            "Please enter the path to your avatar file",
+            "The default is an avatar.png file in the current directory",
+            "(leave empty if you want the default or have no avatar)",
+            sep="\n",
+        )
         avatar = input("Avatar: ")
+
+        print(
+            "Please enter the connection URL of your Redis instance",
+            "(leave empty if you are not using Redis)",
+            sep="\n",
+        )
         redis_url = input("Redis URL: ")
+
+        print(
+            "Please supply a list of rooms to automatically join",
+            "for example, foo@muc.vvvaria.org, bar@muc.vvvvvvaria.org",
+            "(leave empty if you don't want to join rooms when starting)",
+            sep="\n",
+        )
         rooms = input("Rooms: ")
+
+        print(
+            "Please choose to disable auto-join on invite if you prefer",
+            "that your bot does not join after being invited to a room",
+            "(type 'y' to choose to disable)",
+            sep="\n",
+        )
         no_auto_join = input("Disable auto-join on invite? ")
+
+        print("*" * 79)
 
         config = ConfigParser()
         config[self.name] = {"account": account, "password": password}
@@ -258,10 +299,13 @@ class Bot(ClientXMPP):
         if rooms:
             config[self.name]["rooms"] = rooms
         if no_auto_join:
-            config[self.name]["auto_join"] = no_auto_join
+            config[self.name]["auto_join"] = (
+                True if no_auto_join == "y" else False
+            )
 
         with open(self.CONFIG_FILE, "w") as file_handle:
             config.write(file_handle)
+            self.log.info(f"Generated {self.CONFIG_FILE}")
 
     def init_bot(self):
         """Initialise bot with connection details."""

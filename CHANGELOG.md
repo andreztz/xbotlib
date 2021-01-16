@@ -8,6 +8,7 @@
 - Allow to load custom plugins ([#24](https://git.autonomic.zone/decentral1se/xbotlib/issues/24))
 - Supports rooms configuration for auto-joining ([#25](https://git.autonomic.zone/decentral1se/xbotlib/issues/25))
 - Add `--no-auto-join` to disable automatically responding to invites ([#26](https://git.autonomic.zone/decentral1se/xbotlib/issues/26))
+- Improve UX for initial configuration generation
 
 # xbotlib 0.10.0 (2021-01-16)
 
