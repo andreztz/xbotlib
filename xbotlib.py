@@ -218,11 +218,9 @@ class Bot(ClientXMPP):
 
             if _message.body.startswith("/"):
                 self.meta(_message, to=_message.sender)
-                return
 
             if _message.body.startswith("!"):
                 self.command(_message, to=_message.sender)
-                return
 
             try:
                 self.direct(_message)
@@ -267,11 +265,9 @@ class Bot(ClientXMPP):
 
                 if _message.body.startswith("/"):
                     self.meta(_message, room=_message.room)
-                    return
 
                 if f"{self.nick}:!" in _message.body:
                     self.command(_message, room=_message.room)
-                    return
 
                 try:
                     self.group(_message)
