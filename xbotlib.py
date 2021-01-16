@@ -451,6 +451,10 @@ class GlossBot(Bot):
 
     def rand(self, **kwargs):
         """List a random entry."""
+        if not self.db.keys():
+            self.reply("Glossary is empty", **kwargs)
+            return
+
         entry = choice(self.db.keys())
         self.reply(f"{entry} - {self.db[entry]}", **kwargs)
 
@@ -458,6 +462,7 @@ class GlossBot(Bot):
         """List all entries."""
         if not self.db.keys():
             self.reply("Glossary is empty", **kwargs)
+            return
 
         for entry in self.db.keys():
             self.reply(f"{entry} - {self.db[entry]}", **kwargs)
