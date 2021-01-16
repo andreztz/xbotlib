@@ -109,6 +109,16 @@ class Config:
         """The nickname of the bot."""
         return self.section.get("nick", None)
 
+    @property
+    def avatar(self):
+        """The avatar of the bot."""
+        return self.section.get("avatar", None)
+
+    @property
+    def redis_url(self):
+        """The Redis connection URL."""
+        return self.section.get("redis_url", None)
+
 
 class Bot(ClientXMPP):
     """XMPP bots for humans."""
