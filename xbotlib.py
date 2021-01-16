@@ -170,6 +170,13 @@ class Bot(ClientXMPP):
             help="Avatar for the bot account",
             default="avatar.png",
         )
+        self.parser.add_argument(
+            "-r",
+            "--redis-url",
+            dest="redis_url",
+            help="Redis storage connection URL",
+            default="redis://localhost:6379/0",
+        )
 
         self.args = self.parser.parse_args()
 
@@ -201,15 +208,17 @@ class Bot(ClientXMPP):
         password = getpass("Password: ")
         nick = input("Nickname: ")
         avatar = input("Avatar: ")
+        redis_url = input("Redis URL: ")
 
         config = ConfigParser()
         config[self.name] = {"account": account, "password": password}
 
         if nick:
             config[self.name]["nick"] = nick
-
         if avatar:
             config[self.name]["avatar"] = avatar
+        if redis_url:
+            config[self.name]["redis_url"] = redis_url
 
         with open(self.CONFIG_FILE, "w") as file_handle:
             config.write(file_handle)
@@ -234,6 +243,11 @@ class Bot(ClientXMPP):
             or self.config.avatar
             or environ.get("XBOT_AVATAR", None)
         )
+        redis_url = (
+            self.args.redis_url
+            or self.config.redis_url
+            or environ.get("XBOT_REDIS_URL", None)
+        )
 
         if not account:
             self.log.error("Unable to discover account")
@@ -251,6 +265,7 @@ class Bot(ClientXMPP):
         self.password = password
         self.nick = nick
         self.avatar = avatar
+        self.redis_url = redis_url
 
     def register_xmpp_event_handlers(self):
         """Register functions against specific XMPP event handlers."""
@@ -340,14 +355,12 @@ class Bot(ClientXMPP):
 
     def init_db(self):
         """Initialise the Redis key/value store."""
-        url = environ.get("REDIS_URL", None)
-
-        if not url:
+        if not self.redis_url:
             self.db = None
-            self.log.info("No storage discovered")
-        else:
-            self.db = Redis.from_url(url, decode_responses=True)
-            self.log.info("Successfully connected to storage")
+            return self.log.info("No storage discovered")
+
+        self.db = Redis.from_url(self.redis_url, decode_responses=True)
+        self.log.info("Successfully connected to storage")
 
     def run(self):
         """Run the bot."""

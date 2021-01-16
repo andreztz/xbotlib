@@ -3,13 +3,14 @@
 # xbotlib 0.11.0 (2021-01-16)
 
 - Allow to configure avatar from configuration file and environment
+- Load Redis details fron conf and CLI also ([#23](https://git.autonomic.zone/decentral1se/xbotlib/issues/23))
+- Migrate Redis environment naming: `REDIS_URL` -> `XBOT_REDIS_URL` ([#23](https://git.autonomic.zone/decentral1se/xbotlib/issues/23))
 
 # xbotlib 0.10.0 (2021-01-16)
 
 - Implement Redis based storage ([#21](https://git.autonomic.zone/decentral1se/xbotlib/issues/21))
 - Add `GlossBot` ([#10](https://git.autonomic.zone/decentral1se/xbotlib/issues/10))
 - Revise command syntax and use unified `@` approach
-- `REDIS_URL` -> `XBOT_REDIS_URL`
 - `SimpleMessage.body` -> `SimpleMessage.text`
 - Add `SimpleMessage.content` which simplifies parsing logic
 
