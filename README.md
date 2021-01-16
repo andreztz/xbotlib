@@ -59,6 +59,7 @@ Read more in the [API reference](#api-reference) for how to write your own bots.
 
 - **EchoBot**: Sends back what you sent it
 - **WhisperBot**: Anonymous whispering in group chats
+- **GlossBot**: Building a shared glossary together
 
 See [xbotlib.py](./xbotlib.py) for all example bots.
 
@@ -91,12 +92,13 @@ A simple message interface.
 
 Attributes:
 
-- **body**: the body of the message
+- **text**: the entire text of the message
+- **content**: the text of the message after the nick
 - **sender**: the user the message came from
 - **room**: the room the message came from
 - **receiver**: the receiver of the message
-- **nickname**: the nickname of the sender
-- **type**: the type of message (`chat` or `groupchat`)
+- **nick**: the nickname of the sender
+- **type**: the type of message
 
 ## Documenting your bot
 
@@ -111,15 +113,15 @@ See more in the [commands](#commands) section on how to use this.
 
 ## Commands
 
-Using `!<command>` in direct messages and `<nick>:!<command>` in group chats,
+Using `!<command>` in direct messages and `<nick>, @<command>` in group chats,
 here are the supported commands.
 
-- **!uptime**: how long the bot has been running
-- **!help**: the end-user provided help text of what the bot does
+- **@uptime**: how long the bot has been running
+- **@help**: the help text for what the bot does
 
 There are also more general status commands which all bots respond to.
 
-- **/bots**: status check on who is a bot in the group chat
+- **@bots**: status check on who is a bot in the group chat
 
 ## Avatars
 
