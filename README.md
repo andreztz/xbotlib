@@ -17,26 +17,34 @@ borrowed/stolen/adapted/reimagined from the XMPP bot experiments that have gone
 on and are still going on in
 [Varia](https://git.vvvvvvaria.org/explore/repos?tab=&sort=recentupdate&q=bots).
 
+- [XMPP bots for humans](#xmpp-bots-for-humans)
 - [Install](#install)
 - [Example](#example)
 - [API Reference](#api-reference)
-  - [Bot.direct(message)](#botdirect-message-)
-  - [Bot.group(message)](#botgroup-message-)
-  - [SimpleMessage](#simplemessage)
-- [Documenting your bot](#documenting-your-bot)
-- [Commands](#commands)
-- [Avatars](#avatars)
-- [Configure your bot](#configure-your-bot)
+
+* [Bot.direct(message)](#botdirect-message-)
+* [Bot.group(message)](#botgroup-message-)
+* [SimpleMessage](#simplemessage)
+
+- [Working with your bot](#working-with-your-bot)
+
+* [Documentation](#documentation)
+* [Commands](#commands)
+* [Avatars](#avatars)
+
+- [Configuration](#configuration)
   - [Using the `.conf` configuration file](#using-the--conf--configuration-file)
   - [Using the command-line interface](#using-the-command-line-interface)
   - [Using the environment](#using-the-environment)
-- [Persistent storage](#persistent-storage)
-- [Redis key/value storage](#redis-key-value-storage)
-- [Loading Plugins](#loading-plugins)
+
+* [Persistent storage](#persistent-storage)
+  - [Redis key/value storage](#redis-key-value-storage)
+* [Loading Plugins](#loading-plugins)
+
 - [Deploy your bots](#deploy-your-bots)
 - [Roadmap](#roadmap)
 - [Changes](#changes)
-- [license](#license)
+- [License](#license)
 
 ## Install
 
@@ -131,7 +139,9 @@ Attributes:
 - **nick**: the nickname of the sender
 - **type**: the type of message
 
-## Documenting your bot
+## Working with your bot
+
+### Documentation
 
 Add a `help = "my help"` to your `Bot` class like so.
 
@@ -142,7 +152,7 @@ class MyBot(Bot):
 
 See more in the [commands](#commands) section on how to use this.
 
-## Commands
+### Commands
 
 Using `@<command>` in direct messages and `<nick>, @<command>` (the `,` is
 optional, anything will be accepted here and there doesn't seem to be a
@@ -156,7 +166,7 @@ There are also more general status commands which all bots respond to.
 
 - `@bots`: status check on who is a bot in the group chat
 
-## Avatars
+### Avatars
 
 By default, `xbotlib` will look for an `avatar.png` (so far tested with `.png`
 but other file types may work) file alongside your Python script which contains
@@ -164,14 +174,14 @@ your bot implementation. You can also specify another path using the `--avatar`
 option on the command-line interface. The images should ideally have a height
 of `64` and a width of `64` pixels each.
 
-## Configure your bot
+## Configuration
 
 All the ways you can pass configuration details to your bot. There are three
 ways to configure your bot, the configuration file, command-line interface and
 the environment. Use whichever one suits you best. The values are loaded in the
 following order: command-line > configuration file > environment.
 
-### Using the `.conf` configuration file
+#### Using the `.conf` configuration file
 
 If you run simply run your Python script which contains the bot then `xbotlib`
 will generate a configuration for you by asking a few questions. This is the
@@ -187,7 +197,7 @@ nick = echobot
 rooms = test@muc.example.com
 ```
 
-### Using the command-line interface
+#### Using the command-line interface
 
 Every bot accepts a number of comand-line arguments to load configuration. You
 can use the `--help` option to see what is available (e.g. `python bot.py --help`).
@@ -216,7 +226,7 @@ optional arguments:
   --no-auto-join        Disable automatically joining rooms when invited
 ```
 
-### Using the environment
+#### Using the environment
 
 `xbotlib` will try to read the following configuration values from the
 environment if it cannot read them from a configuration file or the
@@ -231,9 +241,9 @@ deployments.
 - **XBOT_ROOMS**: The rooms to automatically join
 - **XBOT_NO_AUTO_JOIN**: Disable auto-joining on invite
 
-## Persistent storage
+### Persistent storage
 
-## Redis key/value storage
+#### Redis key/value storage
 
 `xbotlib` supports using [Redis](https://redis.io/) as a storage back-end. It
 is simple to work with because the interface is exactly like a dictionary. You
@@ -259,7 +269,7 @@ You should see `INFO Successfully connected to storage` when your bot
 initialises. Please see the `GlossBot` example for more on how to work with
 this type of storage.
 
-## Loading Plugins
+### Loading Plugins
 
 You can specify a `plugins = [...]` on your bot definition and they will be
 automatically loaded.
