@@ -304,7 +304,7 @@ class Bot(ClientXMPP):
     def reply(self, body, to=None, room=None):
         """Send back a reply."""
         if to is None and room is None:
-            self.log.info("`to` or `room` arguments required for `reply`")
+            self.log.error("`to` or `room` arguments required for `reply`")
             exit(1)
 
         if to is not None and room is not None:
