@@ -5,6 +5,7 @@ from configparser import ConfigParser
 from datetime import datetime as dt
 from getpass import getpass
 from imghdr import what
+from inspect import cleandoc
 from logging import DEBUG, INFO, basicConfig, getLogger
 from os import environ
 from os.path import exists
@@ -398,13 +399,12 @@ class GlossBot(Bot):
 
     """
 
-    help = """I help build a shared glossary
-
+    help = """
+    I help build a shared glossary
       glossbot: @add <entry> - <definition>
       glossbot: @rm <entry>
       glossbot: @rand
       glossbot: @ls
-
     """
 
     def group(self, message):
