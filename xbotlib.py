@@ -424,22 +424,22 @@ class GlossBot(Bot):
             try:
                 _, body = message.body.split(":!add")
                 entry, definition = body.strip().split("-").strip()
-                self.add(entry, definition, to=message.sender)
+                self.add(entry, definition, room=message.room)
             except ValueError:
-                self.reply("Hmmm, couldn't read that", to=message.sender)
+                self.reply("Hmmm, couldn't read that", room=message.room)
 
         elif "!rm" in message.body:
             try:
                 entry = message.body.split(":!rm")[-1].strip()
-                self.rm(entry, to=message.sender)
+                self.rm(entry, room=message.room)
             except ValueError:
-                self.reply("Hmmm, couldn't read that", to=message.sender)
+                self.reply("Hmmm, couldn't read that", room=message.room)
 
         elif "!rand" in message.body:
-            self.rand(to=message.sender)
+            self.rand(room=message.room)
 
         elif "!ls" in message.body:
-            self.ls(to=message.sender)
+            self.ls(room=message.room)
 
         else:
             self.log.error(f"{message.body} is not recognised")
