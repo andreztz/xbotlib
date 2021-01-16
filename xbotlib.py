@@ -214,16 +214,18 @@ class Bot(ClientXMPP):
 
     def direct_message(self, message):
         """Handle message event."""
-        if message["type"] in ("chat", "normal"):
-            _message = SimpleMessage(message)
+        if message["type"] not in ("chat", "normal"):
+            return
 
-            if "@" in _message.body:
-                self.direct_command(_message)
+        _message = SimpleMessage(message)
 
-            try:
-                self.direct(_message)
-            except AttributeError:
-                self.log.info(f"Bot.direct not implemented for {self.nick}")
+        if "@" in _message.body:
+            self.direct_command(_message)
+
+        try:
+            self.direct(_message)
+        except AttributeError:
+            self.log.info(f"Bot.direct not implemented for {self.nick}")
 
     def session_start(self, message):
         """Handle session_start event."""
@@ -257,20 +259,21 @@ class Bot(ClientXMPP):
 
     def group_message(self, message):
         """Handle groupchat_message event."""
-        if message["type"] in ("groupchat", "normal"):
-            if message["mucnick"] != self.config.nick:
-                _message = SimpleMessage(message)
+        if message["type"] not in ("groupchat", "normal"):
+            return
 
-                if _message.body.startswith("@"):
-                    self.meta(_message, room=_message.room)
+        if message["mucnick"] == self.config.nick:
+            return
 
-                if f"{self.nick}:!" in _message.body:
-                    self.command(_message, room=_message.room)
+        _message = SimpleMessage(message)
 
-                try:
-                    self.group(_message)
-                except AttributeError:
-                    self.log.info(f"Bot.group not implemented for {self.nick}")
+        if self.nick in _message.body and "@" in _message.body:
+            self.group_command(_message, room=_message.room)
+
+        try:
+            self.group(_message)
+        except AttributeError:
+            self.log.info(f"Bot.group not implemented for {self.nick}")
 
     def register_xmpp_plugins(self):
         """Register XMPP plugins that the bot supports."""
