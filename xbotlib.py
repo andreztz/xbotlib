@@ -217,11 +217,8 @@ class Bot(ClientXMPP):
         if message["type"] in ("chat", "normal"):
             _message = SimpleMessage(message)
 
-            if _message.body.startswith("/"):
-                self.meta(_message, to=_message.sender)
-
-            if _message.body.startswith("!"):
-                self.command(_message, to=_message.sender)
+            if "@" in _message.body:
+                self.direct_command(_message)
 
             try:
                 self.direct(_message)
@@ -264,7 +261,7 @@ class Bot(ClientXMPP):
             if message["mucnick"] != self.config.nick:
                 _message = SimpleMessage(message)
 
-                if _message.body.startswith("/"):
+                if _message.body.startswith("@"):
                     self.meta(_message, room=_message.room)
 
                 if f"{self.nick}:!" in _message.body:
@@ -327,24 +324,17 @@ class Bot(ClientXMPP):
         """Time since the bot came up."""
         return naturaldelta(self.start - dt.now())
 
-    def command(self, message, **kwargs):
-        """Handle "!" style commands with built-in responses."""
-        command = message.body.split("!")[-1]
-
-        if command == "uptime":
-            self.reply(self.uptime, **kwargs)
-        elif command == "help":
+    def direct_command(self, message):
+        """Handle commands in direct messages."""
+        if "@uptime" in message.body:
+            self.reply(self.uptime, to=message.sender)
+        elif "@help" in message.body:
             try:
-                self.reply(self.help, **kwargs)
+                self.reply(cleandoc(self.help), to=message.sender)
             except AttributeError:
-                self.reply("No help found 🤔️", **kwargs)
-
-    def meta(self, message, **kwargs):
-        """Handle "/" style commands with built-in responses."""
-        command = message.body.split("/")[-1]
-
-        if command == "bots":
-            self.reply("🖐️", **kwargs)
+                self.reply("No help found 🤔️", to=message.sender)
+        else:
+            self.log.info(f"'{message.body}' not handled")
 
 
 class EchoBot(Bot):
