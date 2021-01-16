@@ -200,12 +200,16 @@ class Bot(ClientXMPP):
         account = input("Account: ")
         password = getpass("Password: ")
         nick = input("Nickname: ")
+        avatar = input("Avatar: ")
 
         config = ConfigParser()
         config[self.name] = {"account": account, "password": password}
 
         if nick:
             config[self.name]["nick"] = nick
+
+        if avatar:
+            config[self.name]["avatar"] = avatar
 
         with open(self.CONFIG_FILE, "w") as file_handle:
             config.write(file_handle)
@@ -225,6 +229,11 @@ class Bot(ClientXMPP):
         nick = (
             self.args.nick or self.config.nick or environ.get("XBOT_NICK", None)
         )
+        avatar = (
+            self.args.avatar
+            or self.config.avatar
+            or environ.get("XBOT_AVATAR", None)
+        )
 
         if not account:
             self.log.error("Unable to discover account")
@@ -241,8 +250,7 @@ class Bot(ClientXMPP):
         self.account = account
         self.password = password
         self.nick = nick
-
-        self.avatar = self.args.avatar
+        self.avatar = avatar
 
     def register_xmpp_event_handlers(self):
         """Register functions against specific XMPP event handlers."""

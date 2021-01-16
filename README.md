@@ -156,6 +156,7 @@ deployments.
 - **XBOT_ACCOUNT**: The bot account
 - **XBOT_PASSWORD**: The bot password
 - **XBOT_NICK**: The bot nickname
+- **XBOT_AVATAR**: The bot avatar icon
 
 ## Deploy your bots
 

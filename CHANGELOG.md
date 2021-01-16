@@ -1,5 +1,9 @@
 # xbotlib x.x.x (UNRELEASED)
 
+# xbotlib 0.11.0 (2021-01-16)
+
+- Allow to configure avatar from configuration file and environment
+
 # xbotlib 0.10.0 (2021-01-16)
 
 - Implement Redis based storage ([#21](https://git.autonomic.zone/decentral1se/xbotlib/issues/21))
