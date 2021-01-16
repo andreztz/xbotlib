@@ -5,6 +5,7 @@
 - Allow to configure avatar from configuration file and environment
 - Load Redis details fron conf and CLI also ([#23](https://git.autonomic.zone/decentral1se/xbotlib/issues/23))
 - Migrate Redis environment naming: `REDIS_URL` -> `XBOT_REDIS_URL` ([#23](https://git.autonomic.zone/decentral1se/xbotlib/issues/23))
+- Allow to load custom plugins ([#24](https://git.autonomic.zone/decentral1se/xbotlib/issues/24))
 
 # xbotlib 0.10.0 (2021-01-16)
 

@@ -361,6 +361,12 @@ class Bot(ClientXMPP):
         self.register_plugin("xep_0199")  # XMPP Ping
         self.register_plugin("xep_0084")  # User Avatar
 
+        try:
+            for plugin in self.plugins:
+                self.register_plugin(plugin)
+        except AttributeError:
+            self.log.info("No additional plugins loaded")
+
     def init_db(self):
         """Initialise the Redis key/value store."""
         if not self.redis_url:

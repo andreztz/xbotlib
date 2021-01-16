@@ -189,6 +189,16 @@ You should see `INFO Successfully connected to storage` when your bot
 initialises. Please see the `GlossBot` example for more on how to work with
 this type of storage.
 
+## Loading Plugins
+
+You can specify a `plugins = [...]` on your bot definition and they will be
+automatically loaded.
+
+```python
+class MyBot(Bot):
+    plugins = ["xep_0066"]
+```
+
 ## Roadmap
 
 See the [issue tracker](https://git.autonomic.zone/decentral1se/xbotlib/issues).
