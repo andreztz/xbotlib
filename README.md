@@ -113,7 +113,7 @@ See more in the [commands](#commands) section on how to use this.
 
 ## Commands
 
-Using `!<command>` in direct messages and `<nick>, @<command>` in group chats,
+Using `@<command>` in direct messages and `<nick>, @<command>` in group chats,
 here are the supported commands.
 
 - **@uptime**: how long the bot has been running
@@ -141,6 +141,16 @@ If you run simply run your Python script which contains the bot then `xbotlib`
 will generate a configuration for you by asking a few questions. This is the
 simplest way to run your bot locally.
 
+Here is an example of a working configuration.
+
+```conf
+[echobot]
+account = echobot@vvvvvvaria.org
+password = ...thepassword...
+nick = echobot
+rooms = test@muc.example.com
+```
+
 ### Using the command-line interface
 
 Every bot accepts a number of comand-line arguments to load configuration. You
@@ -160,10 +170,6 @@ deployments.
 - **XBOT_REDIS_URL**: Redis key store connection URL
 - **XBOT_ROOMS**: The rooms to automatically join
 - **XBOT_NO_AUTO_JOIN**: Disable auto-joining on invite
-
-## Deploy your bots
-
-See [bots.varia.zone](https://bots.varia.zone/).
 
 ## Persistent storage
 
@@ -200,6 +206,10 @@ automatically loaded.
 class MyBot(Bot):
     plugins = ["xep_0066"]
 ```
+
+## Deploy your bots
+
+See [bots.varia.zone](https://bots.varia.zone/).
 
 ## Roadmap
 
