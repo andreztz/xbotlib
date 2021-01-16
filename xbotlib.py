@@ -389,8 +389,6 @@ class Bot(ClientXMPP):
                 self.reply(cleandoc(self.help), **kwargs)
             except AttributeError:
                 self.reply("No help found 🤔️", **kwargs)
-        else:
-            self.log.info(f"'{message.content}' not handled")
 
 
 class EchoBot(Bot):
@@ -451,29 +449,34 @@ class GlossBot(Bot):
 
     def group(self, message):
         """Handle glossary commands."""
-        if "!add" in message.body:
+        if "@add" in message.content:
             try:
-                _, body = message.body.split(":!add")
-                entry, definition = body.strip().split("-").strip()
-                self.add(entry, definition, room=message.room)
-            except ValueError:
-                self.reply("Hmmm, couldn't read that", room=message.room)
-
-        elif "!rm" in message.body:
+                parsed = self.parse_add(message)
+                self.add(*parsed, room=message.room)
+            except Exception:
+                response = f"Couldn't understand '{message.content}'?"
+                self.reply(response, room=message.sender)
+        elif "@rm" in message.content:
             try:
-                entry = message.body.split(":!rm")[-1].strip()
-                self.rm(entry, room=message.room)
-            except ValueError:
-                self.reply("Hmmm, couldn't read that", room=message.room)
-
-        elif "!rand" in message.body:
+                parsed = message.content.split("@rm")[-1].strip()
+                self.rm(parsed, room=message.room)
+            except Exception:
+                response = f"Couldn't understand '{message.content}'?"
+                self.reply(response, room=message.sender)
+        elif "@rand" in message.content:
             self.rand(room=message.room)
-
-        elif "!ls" in message.body:
+        elif "@ls" in message.content:
             self.ls(room=message.room)
-
         else:
-            self.log.error(f"{message.body} is not recognised")
+            self.log.info(f"{message.text} not recognised as glossbot command")
+
+    def parse_add(self, message):
+        """Parse the add command syntax."""
+        try:
+            replaced = message.content.replace("@add", "")
+            return [s.strip() for s in replaced.split("-")]
+        except ValueError:
+            self.log.error(f"Failed to parse {message.content}")
 
     def add(self, entry, definition, **kwargs):
         """Add a new entry."""
@@ -483,8 +486,7 @@ class GlossBot(Bot):
     def rand(self, **kwargs):
         """List a random entry."""
         if not self.db.keys():
-            self.reply("Glossary is empty", **kwargs)
-            return
+            return self.reply("Glossary is empty 🙃️", **kwargs)
 
         entry = choice(self.db.keys())
         self.reply(f"{entry} - {self.db[entry]}", **kwargs)
@@ -492,16 +494,15 @@ class GlossBot(Bot):
     def ls(self, **kwargs):
         """List all entries."""
         if not self.db.keys():
-            self.reply("Glossary is empty", **kwargs)
-            return
+            return self.reply("Glossary is empty 🙃️", **kwargs)
 
-        for entry in self.db.keys():
+        for entry in sorted(self.db.keys()):
             self.reply(f"{entry} - {self.db[entry]}", **kwargs)
 
     def rm(self, entry, **kwargs):
         """Remove an entry."""
-        try:
-            self.db[entry].delete()
-            self.reply("Removed ✌️", **kwargs)
-        except KeyError:
-            self.reply(f"{entry} doesn't exist?", **kwargs)
+        if entry not in self.db.keys():
+            return self.reply(f"{entry} doesn't exist?", **kwargs)
+
+        self.db.delete(entry)
+        self.reply("Removed ✌️", **kwargs)
