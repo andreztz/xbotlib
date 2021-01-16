@@ -407,7 +407,7 @@ class EchoBot(Bot):
 
     def group(self, message):
         """Send back whatever receive in group chats."""
-        self.reply(message.text.split(":")[-1], room=message.room)
+        self.reply(message.content, room=message.room)
 
 
 class WhisperBot(Bot):
