@@ -174,7 +174,7 @@ class Bot(ClientXMPP):
             "-a",
             "--account",
             dest="account",
-            help="Account for the bot account (foo@example.com)",
+            help="Account for the bot account",
         )
         self.parser.add_argument(
             "-p",
