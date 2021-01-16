@@ -164,18 +164,13 @@ class Bot(ClientXMPP):
             help="Nickname for the bot account",
         )
         self.parser.add_argument(
-            "-av",
-            "--avatar",
-            dest="avatar",
-            help="Avatar for the bot account",
-            default="avatar.png",
+            "-av", "--avatar", dest="avatar", help="Avatar for the bot account"
         )
         self.parser.add_argument(
             "-r",
             "--redis-url",
             dest="redis_url",
             help="Redis storage connection URL",
-            default="redis://localhost:6379/0",
         )
 
         self.args = self.parser.parse_args()
@@ -242,6 +237,7 @@ class Bot(ClientXMPP):
             self.args.avatar
             or self.config.avatar
             or environ.get("XBOT_AVATAR", None)
+            or "avatar.png"
         )
         redis_url = (
             self.args.redis_url
