@@ -123,9 +123,16 @@ class Config:
     def rooms(self):
         """A list of rooms to automatically join."""
         rooms = self.section.get("rooms", None)
-        if isinstance(rooms, str):
-            return [rooms]
+
+        if rooms is None:
+            return None
+
         return rooms.split(",")
+
+    @property
+    def no_auto_join(self):
+        """Disable auto-join when invited."""
+        return self.section.get("no_auto_join", None)
 
 
 class Bot(ClientXMPP):
@@ -197,6 +204,13 @@ class Bot(ClientXMPP):
             nargs="+",
             help="Rooms to automatically join",
         )
+        self.parser.add_argument(
+            "--no-auto-join",
+            default=False,
+            action="store_true",
+            dest="no_auto_join",
+            help="Disable automatically joining rooms when invited",
+        )
 
         self.args = self.parser.parse_args()
 
@@ -229,7 +243,8 @@ class Bot(ClientXMPP):
         nick = input("Nickname: ")
         avatar = input("Avatar: ")
         redis_url = input("Redis URL: ")
-        rooms = input("Rooms (comma separated): ")
+        rooms = input("Rooms: ")
+        no_auto_join = input("Disable auto-join on invite? ")
 
         config = ConfigParser()
         config[self.name] = {"account": account, "password": password}
@@ -242,6 +257,8 @@ class Bot(ClientXMPP):
             config[self.name]["redis_url"] = redis_url
         if rooms:
             config[self.name]["rooms"] = rooms
+        if no_auto_join:
+            config[self.name]["auto_join"] = no_auto_join
 
         with open(self.CONFIG_FILE, "w") as file_handle:
             config.write(file_handle)
@@ -277,6 +294,11 @@ class Bot(ClientXMPP):
             or self.config.rooms
             or environ.get("XBOT_ROOMS", None)
         )
+        no_auto_join = (
+            self.args.no_auto_join
+            or self.config.no_auto_join
+            or environ.get("XBOT_NO_AUTO_JOIN", None)
+        )
 
         if not account:
             self.log.error("Unable to discover account")
@@ -296,6 +318,7 @@ class Bot(ClientXMPP):
         self.avatar = avatar
         self.redis_url = redis_url
         self.rooms = rooms
+        self.no_auto_join = no_auto_join
 
     def register_xmpp_event_handlers(self):
         """Register functions against specific XMPP event handlers."""
@@ -354,13 +377,22 @@ class Bot(ClientXMPP):
 
     def join_rooms(self):
         """Automatically join rooms if specified."""
+        if self.rooms is None:
+            return
+
         for room in self.rooms:
             self.plugin["xep_0045"].join_muc(room, self.config.nick)
             self.log.info(f"Joining {room} automatically")
 
     def group_invite(self, message):
         """Accept invites to group chats."""
-        self.plugin["xep_0045"].join_muc(message["from"], self.config.nick)
+        room = message["from"]
+
+        if self.no_auto_join:
+            return self.log.info(f"Not joining {room} (disabled)")
+
+        self.plugin["xep_0045"].join_muc(room, self.config.nick)
+        self.log.info(f"Joining {room} as invited")
 
     def group_message(self, message):
         """Handle group chat message events."""

@@ -159,6 +159,7 @@ deployments.
 - **XBOT_AVATAR**: The bot avatar icon
 - **XBOT_REDIS_URL**: Redis key store connection URL
 - **XBOT_ROOMS**: The rooms to automatically join
+- **XBOT_NO_AUTO_JOIN**: Disable auto-joining on invite
 
 ## Deploy your bots
 
