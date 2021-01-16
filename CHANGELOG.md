@@ -5,6 +5,9 @@
 - Implement Redis based storage ([#21](https://git.autonomic.zone/decentral1se/xbotlib/issues/21))
 - Add `GlossBot` ([#10](https://git.autonomic.zone/decentral1se/xbotlib/issues/10))
 - Revise command syntax and use unified `@` approach
+- `REDIS_URL` -> `XBOT_REDIS_URL`
+- `SimpleMessage.body` -> `SimpleMessage.text`
+- Add `SimpleMessage.content` which simplifies parsing logic
 
 # xbotlib 0.9.0 (2021-01-15)
 
