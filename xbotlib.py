@@ -265,6 +265,9 @@ class Bot(ClientXMPP):
         if message["mucnick"] == self.config.nick:
             return
 
+        if self.nick not in message["body"]:
+            return
+
         _message = SimpleMessage(message)
 
         if self.nick in _message.body and "@" in _message.body:
@@ -357,8 +360,7 @@ class EchoBot(Bot):
 
     def group(self, message):
         """Send back whatever receive in group chats."""
-        if "echobot" in message.body:
-            self.reply(message.body.split(":")[-1], room=message.room)
+        self.reply(message.body.split(":")[-1], room=message.room)
 
 
 class WhisperBot(Bot):
