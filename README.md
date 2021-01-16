@@ -48,11 +48,9 @@ Here's the code for the `EchoBot`.
 ```python
 class EchoBot(Bot):
     def direct(self, message):
-        self.reply(message.body, to=message.sender)
-
+        self.reply(message.text, to=message.sender)
     def group(self, message):
-        if "echobot" in message.body:
-            self.reply(message.body.split(":")[-1], room=message.room)
+        self.reply(message.content, room=message.room)
 ```
 
 Read more in the [API reference](#api-reference) for how to write your own bots.
