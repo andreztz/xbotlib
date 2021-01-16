@@ -177,7 +177,7 @@ class Bot(ClientXMPP):
             "-av", "--avatar", dest="avatar", help="Avatar for the bot account"
         )
         self.parser.add_argument(
-            "-r",
+            "-ru",
             "--redis-url",
             dest="redis_url",
             help="Redis storage connection URL",
