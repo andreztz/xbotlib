@@ -149,12 +149,12 @@ optional, anything will be accepted here and there doesn't seem to be a
 consensus on what is most common way to "at" another user in XMPP) in group chats,
 here are the supported commands.
 
-- **@uptime**: how long the bot has been running
-- **@help**: the help text for what the bot does
+- `@uptime`: how long the bot has been running
+- `@help`: the help text for what the bot does
 
 There are also more general status commands which all bots respond to.
 
-- **@bots**: status check on who is a bot in the group chat
+- `@bots`: status check on who is a bot in the group chat
 
 ## Avatars
 
