@@ -119,6 +119,14 @@ class Config:
         """The Redis connection URL."""
         return self.section.get("redis_url", None)
 
+    @property
+    def rooms(self):
+        """A list of rooms to automatically join."""
+        rooms = self.section.get("rooms", None)
+        if isinstance(rooms, str):
+            return [rooms]
+        return rooms.split(",")
+
 
 class Bot(ClientXMPP):
     """XMPP bots for humans."""
@@ -182,6 +190,13 @@ class Bot(ClientXMPP):
             dest="redis_url",
             help="Redis storage connection URL",
         )
+        self.parser.add_argument(
+            "-r",
+            "--rooms",
+            dest="rooms",
+            nargs="+",
+            help="Rooms to automatically join",
+        )
 
         self.args = self.parser.parse_args()
 
@@ -214,6 +229,7 @@ class Bot(ClientXMPP):
         nick = input("Nickname: ")
         avatar = input("Avatar: ")
         redis_url = input("Redis URL: ")
+        rooms = input("Rooms (comma separated): ")
 
         config = ConfigParser()
         config[self.name] = {"account": account, "password": password}
@@ -224,6 +240,8 @@ class Bot(ClientXMPP):
             config[self.name]["avatar"] = avatar
         if redis_url:
             config[self.name]["redis_url"] = redis_url
+        if rooms:
+            config[self.name]["rooms"] = rooms
 
         with open(self.CONFIG_FILE, "w") as file_handle:
             config.write(file_handle)
@@ -254,6 +272,11 @@ class Bot(ClientXMPP):
             or self.config.redis_url
             or environ.get("XBOT_REDIS_URL", None)
         )
+        rooms = (
+            self.args.rooms
+            or self.config.rooms
+            or environ.get("XBOT_ROOMS", None)
+        )
 
         if not account:
             self.log.error("Unable to discover account")
@@ -272,6 +295,7 @@ class Bot(ClientXMPP):
         self.nick = nick
         self.avatar = avatar
         self.redis_url = redis_url
+        self.rooms = rooms
 
     def register_xmpp_event_handlers(self):
         """Register functions against specific XMPP event handlers."""
@@ -306,6 +330,7 @@ class Bot(ClientXMPP):
         self.send_presence()
         self.get_roster()
         self.publish_avatar()
+        self.join_rooms()
 
     def publish_avatar(self):
         """Publish bot avatar."""
@@ -326,6 +351,12 @@ class Bot(ClientXMPP):
 
         self.plugin["xep_0084"].publish_avatar(contents)
         self.plugin["xep_0084"].publish_avatar_metadata(items=[info])
+
+    def join_rooms(self):
+        """Automatically join rooms if specified."""
+        for room in self.rooms:
+            self.plugin["xep_0045"].join_muc(room, self.config.nick)
+            self.log.info(f"Joining {room} automatically")
 
     def group_invite(self, message):
         """Accept invites to group chats."""
@@ -371,10 +402,13 @@ class Bot(ClientXMPP):
         """Initialise the Redis key/value store."""
         if not self.redis_url:
             self.db = None
-            return self.log.info("No storage discovered")
+            return self.log.info("No Redis storage discovered")
 
-        self.db = Redis.from_url(self.redis_url, decode_responses=True)
-        self.log.info("Successfully connected to storage")
+        try:
+            self.db = Redis.from_url(self.redis_url, decode_responses=True)
+            self.log.info("Successfully connected to Redis storage")
+        except ValueError:
+            self.log.info("Failed to connect to Redis storage")
 
     def run(self):
         """Run the bot."""

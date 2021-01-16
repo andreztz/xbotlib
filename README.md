@@ -158,6 +158,7 @@ deployments.
 - **XBOT_NICK**: The bot nickname
 - **XBOT_AVATAR**: The bot avatar icon
 - **XBOT_REDIS_URL**: Redis key store connection URL
+- **XBOT_ROOMS**: The rooms to automatically join
 
 ## Deploy your bots
 
