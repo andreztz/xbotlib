@@ -17,7 +17,6 @@ borrowed/stolen/adapted/reimagined from the XMPP bot experiments that have gone
 on and are still going on in
 [Varia](https://git.vvvvvvaria.org/explore/repos?tab=&sort=recentupdate&q=bots).
 
-- [XMPP bots for humans](#xmpp-bots-for-humans)
 - [Install](#install)
 - [Example](#example)
 - [API Reference](#api-reference)
