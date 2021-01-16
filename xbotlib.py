@@ -355,7 +355,7 @@ class EchoBot(Bot):
 
     """
 
-    help = "I echo back whatever you send to me 🖖️"
+    help = "I echo messages back 🖖️"
 
     def direct(self, message):
         """Send back whatever we receive."""
@@ -378,7 +378,7 @@ class WhisperBot(Bot):
 
     """
 
-    help = "I whisper your private messages into group chats 😌️"
+    help = "I whisper private messages into group chats 😌️"
 
     def direct(self, message):
         """Receive private messages and whisper them into group chats."""
@@ -398,19 +398,12 @@ class GlossBot(Bot):
 
     """
 
-    help = """I help build a shared glossary. Here are the commands:
+    help = """I help build a shared glossary
 
-    Add an entry:
-      glossbot:!add <entry> - <definition>
-
-    Remove an entry:
-      glossbot:!rm <entry>
-
-    Show a random entry:
-      glossbot:!rand
-
-    List all entries:
-      glossbot:!ls
+      glossbot: @add <entry> - <definition>
+      glossbot: @rm <entry>
+      glossbot: @rand
+      glossbot: @ls
 
     """
 
