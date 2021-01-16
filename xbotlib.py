@@ -427,6 +427,7 @@ class Bot(ClientXMPP):
         try:
             for plugin in self.plugins:
                 self.register_plugin(plugin)
+                self.log.info(f"Loaded {plugin}")
         except AttributeError:
             self.log.info("No additional plugins loaded")
 
