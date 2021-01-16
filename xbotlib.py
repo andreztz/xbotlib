@@ -225,7 +225,7 @@ class Bot(ClientXMPP):
             try:
                 self.direct(_message)
             except AttributeError:
-                self.log.info("Bot.direct not implemented")
+                self.log.info(f"Bot.direct not implemented for {self.nick}")
 
     def session_start(self, message):
         """Handle session_start event."""
@@ -272,7 +272,7 @@ class Bot(ClientXMPP):
                 try:
                     self.group(_message)
                 except AttributeError:
-                    self.log.info("Bot.group not implemented")
+                    self.log.info(f"Bot.group not implemented for {self.nick}")
 
     def register_xmpp_plugins(self):
         """Register XMPP plugins that the bot supports."""
