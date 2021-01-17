@@ -1,5 +1,10 @@
 # xbotlib x.x.x (UNRELEASED)
 
+# xbotlib 0.12.0 (2021-01-17)
+
+- Support running a web server ([#22](https://git.autonomic.zone/decentral1se/xbotlib/issues/22))
+- Remove bots from core now that things are stabilising ([#29](https://git.autonomic.zone/decentral1se/xbotlib/issues/29))
+
 # xbotlib 0.11.0 (2021-01-16)
 
 - Allow to configure avatar from configuration file and environment

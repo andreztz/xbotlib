@@ -22,6 +22,7 @@ on and are still going on in
 - [API Reference](#api-reference)
   - [Bot.direct(message)](#botdirect-message-)
   - [Bot.group(message)](#botgroup-message-)
+  - [Bot.serve()](#botserve)
   - [SimpleMessage](#simplemessage)
 - [Working with your bot](#working-with-your-bot)
   - [Documentation](#documentation)
@@ -34,6 +35,7 @@ on and are still going on in
   - [Persistent storage](#persistent-storage)
     - [Redis key/value storage](#redis-key-value-storage)
   - [Loading Plugins](#loading-plugins)
+  - [Serving HTTP](#serving-http)
 - [Deploy your bots](#deploy-your-bots)
 - [Roadmap](#roadmap)
 - [Changes](#changes)
@@ -117,6 +119,21 @@ Respond to a message in a group chat.
 Arguments:
 
 - **message**: received message (see [SimpleMessage](#simplemessage) below for available attributes)
+
+### Bot.serve()
+
+Serve requests via the built-in web server.
+
+Arguments:
+
+- **request**: the web request
+
+```python
+from xbotlib import Response
+
+def serve(self, request):
+    return Response(text="Hello, World!")
+```
 
 ### SimpleMessage
 
@@ -271,6 +288,35 @@ automatically loaded.
 class MyBot(Bot):
     plugins = ["xep_0066"]
 ```
+
+### Serving HTTP
+
+Your bot will automatically be running a web server at port `8080` when it is
+run. If you're running your bot locally, just visit
+[0.0.0.0:8080](http://0.0.0.0:8080) to see. The default response is just some
+placeholder text. You can write your own responses using the
+[Bot.serve](#botserve) function.
+
+`xbotlib` provides a small wrapper API for
+[Jinja2](https://jinja.palletsprojects.com/en/2.11.x/) which allows you to
+easily template and generate HTML. The web server is provided by
+[aiohttp](https://docs.aiohttp.org/).
+
+```python
+from xbotlib import Response
+
+def serve(self, request):
+    return Response(text="Hello, World!")
+```
+
+If you want to pass data from your `direct`/`group` functions to the `serve`
+function, you'll need to make use of [some type of persistent
+storage](#persistent-storage). Your `serve` function can read from the database
+or file system and then respond with generated HTML from there.
+
+Having your bot avaible on the web is useful for doing healthchecks with
+something like [statping](https://statping.com/) so you be sure that your bot
+is up and running.
 
 ## Deploy your bots
 

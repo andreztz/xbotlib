@@ -14,6 +14,7 @@ from pathlib import Path
 from random import choice
 from sys import exit, stdout
 
+from aiohttp.web import Application, Response, get, run_app
 from humanize import naturaldelta
 from redis import Redis
 from slixmpp import ClientXMPP
@@ -492,9 +493,26 @@ class Bot(ClientXMPP):
         self.connect()
 
         try:
+            self.serve_web()
             self.process(forever=False)
-        except KeyboardInterrupt:
+        except (KeyboardInterrupt, RuntimeError):
             pass
+
+    def serve_web(self):
+        """Serve the web."""
+        self.web = Application()
+
+        try:
+            self.web.add_routes([get("/", self.serve)])
+        except AttributeError:
+            self.web.add_routes([get("/", self.default_serve)])
+
+        self.log.info(f"Serving HTTP on port http://0.0.0.0:8080")
+        run_app(self.web, print=None)
+
+    async def default_serve(self, request):
+        """Default placeholder text for HTML serving."""
+        return Response(text=f"{self.nick} is alive and well")
 
     def reply(self, text, to=None, room=None):
         """Send back a reply."""
