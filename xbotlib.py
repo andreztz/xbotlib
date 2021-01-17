@@ -506,7 +506,7 @@ class Bot(ClientXMPP):
         except AttributeError:
             self.web.add_routes([get("/", self.default_serve)])
 
-        self.log.info(f"Serving HTTP on port http://0.0.0.0:8080")
+        self.log.info("Serving HTTP on port http://0.0.0.0:8080")
         run_app(self.web, print=None)
 
     async def default_serve(self, request):
