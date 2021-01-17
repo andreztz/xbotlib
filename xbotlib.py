@@ -492,7 +492,7 @@ class Bot(ClientXMPP):
         self.connect()
 
         try:
-            self.process()
+            self.process(forever=False)
         except KeyboardInterrupt:
             pass
 
