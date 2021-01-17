@@ -288,13 +288,20 @@ easily template and generate HTML. The web server is provided by
 The default template search path is `index.html.j2` in the current working
 directory. This can be configured through the usual configuration entrypoints.
 
-Here's a small example.
+Here's a small example that renders a random ASCII letter.
+
+```jinja
+<h1>{{ letter }}</h1>
+```
 
 ```python
+from string import ascii_letters
 from xbotlib import Response
 
 def serve(self, request):
-    return Response(text="Hello, World!")
+    letter = choice(ascii_letters)
+    rendered = self.template.render(letter=letter)
+    return Response(body=rendered, content_type="text/html")
 ```
 
 If you want to pass data from your `direct`/`group` functions to the `serve`
