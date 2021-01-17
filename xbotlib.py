@@ -85,6 +85,11 @@ class SimpleMessage:
         """The nick of the message."""
         return self.message["mucnick"]
 
+    @property
+    def url(self):
+        """The URL of a sent file."""
+        return self.message["oob"]["url"]
+
 
 class Config:
     """Bot file configuration."""
@@ -533,6 +538,7 @@ class Bot(ClientXMPP):
         self.register_plugin("xep_0045")  # Multi-User Chat
         self.register_plugin("xep_0199")  # XMPP Ping
         self.register_plugin("xep_0084")  # User Avatar
+        self.register_plugin("xep_0066")  # Proces URIs (files, images)
 
         try:
             for plugin in self.plugins:

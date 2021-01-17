@@ -1,5 +1,9 @@
 # xbotlib x.x.x (UNRELEASED)
 
+# xbotlib 0.12.3 (2021-01-17)
+
+- Support OOB URLs in `SimpleMessage`
+
 # xbotlib 0.12.2 (2021-01-17)
 
 - Support loading Jinja2 template ([#30](https://git.autonomic.zone/decentral1se/xbotlib/issues/30))

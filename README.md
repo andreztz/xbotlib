@@ -119,6 +119,7 @@ Attributes:
 - **receiver**: the receiver of the message
 - **nick**: the nickname of the sender
 - **type**: the type of message
+- **url**: The URL of a sent file
 
 ## Working with your bot
 
