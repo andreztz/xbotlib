@@ -22,7 +22,7 @@ on and are still going on in
 - [API Reference](#api-reference)
   - [Bot.direct(message)](#botdirect-message-)
   - [Bot.group(message)](#botgroup-message-)
-  - [Bot.serve()](#botserve)
+  - [Bot.serve(request)](#botserve-request-)
   - [SimpleMessage](#simplemessage)
 - [Working with your bot](#working-with-your-bot)
   - [Documentation](#documentation)
@@ -97,7 +97,7 @@ Arguments:
 
 - **message**: received message (see [SimpleMessage](#simplemessage) below for available attributes)
 
-### Bot.serve()
+### Bot.serve(request)
 
 Serve requests via the built-in web server.
 
