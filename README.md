@@ -49,15 +49,19 @@ $ pip install xbotlib
 
 ## Example
 
-Put the following in a `echo.py` file. `xbotlib` provides a number of example
-bots which you can use to get moving fast and try things out. This bot is the
-simplest one we have: it simply echoes back whatever message you send it. It is
-an easy way to get started.
+Put the following in a `echo.py` file. This bot is pretty simple: it echoes
+back whatever message you send it. It is an easy way to get started.
 
 ```python
-from xbotlib import EchoBot
+from xbotlib import Bot
 
-EchotBot()
+class EchoBot(Bot):
+
+    def direct(self, message):
+        self.reply(message.text, to=message.sender)
+
+    def group(self, message):
+        self.reply(message.content, room=message.room)
 ```
 
 And then `python echo.py`. You will be asked a few questions in order to load
@@ -65,36 +69,7 @@ the account details that your bot will be using. This will generate an
 `echobot.conf` file in the same working directory for further use. See the
 [configuration](#configure-your-bot) section for more.
 
-Here's the annotated source for the `EchoBot`.
-
-```python
-from xbotlib import Bot
-
-# Define a class and inherit from xbotlib.Bot
-class EchoBot(Bot):
-
-    # Respond to direct messages using the `direct` function
-    def direct(self, message):
-        # Send back the entire text of the message using `message.text`
-        self.reply(message.text, to=message.sender)
-
-    # Respond to group chat messages using the `group` function
-    def group(self, message):
-        # Send back the content of the message. In this case if we were
-        # sent `echobot, hoi` in the group chat then the `message.content`
-        # would be equal to `hoi`
-        self.reply(message.content, room=message.room)
-```
-
 Read more in the [API reference](#api-reference) for how to write your own bots.
-
-A numer of other example bots are provided.
-
-- **EchoBot**: Sends back what you sent it
-- **WhisperBot**: Anonymous whispering in group chats
-- **GlossBot**: Building a shared glossary together
-
-See [xbotlib.py](./xbotlib.py) for the sources.
 
 ## API Reference
 
