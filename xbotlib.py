@@ -8,13 +8,14 @@ from getpass import getpass
 from imghdr import what
 from inspect import cleandoc
 from logging import DEBUG, INFO, basicConfig, getLogger
-from os import environ
+from os import environ, getcwd
 from os.path import exists
 from pathlib import Path
 from sys import exit, stdout
 
 from aiohttp.web import Application, Response, get, run_app
 from humanize import naturaldelta
+from jinja2 import Environment, FileSystemLoader
 from redis import Redis
 from slixmpp import ClientXMPP
 
@@ -139,6 +140,11 @@ class Config:
         """The port to serve from."""
         return self.section.get("port", None)
 
+    @property
+    def template(self):
+        """The Jinja template to render."""
+        return self.section.get("template", None)
+
 
 class Bot(ClientXMPP):
     """XMPP bots for humans."""
@@ -150,7 +156,6 @@ class Bot(ClientXMPP):
         """Initialise the object."""
         self.name = type(self).__name__.lower()
         self.start = dt.now()
-
         self.CONFIG_FILE = f"{self.name}.conf"
 
         self.parse_arguments()
@@ -221,6 +226,12 @@ class Bot(ClientXMPP):
             "--port",
             dest="port",
             help="The port to serve from",
+        )
+        self.parser.add_argument(
+            "-t",
+            "--template",
+            dest="template",
+            help="The template to render",
         )
 
         self.args = self.parser.parse_args()
@@ -303,6 +314,13 @@ class Bot(ClientXMPP):
         )
         port = input("Port: ")
 
+        print(
+            "Please choose Jinja template file path",
+            "(leave empty to choose default value of index.html.j2)",
+            sep="\n",
+        )
+        template = input("Jinja HTML template: ")
+
         print("*" * 79)
 
         config = ConfigParser()
@@ -322,6 +340,8 @@ class Bot(ClientXMPP):
             )
         if port:
             config[self.name]["port"] = port
+        if template:
+            config[self.name]["template"] = template
 
         with open(self.CONFIG_FILE, "w") as file_handle:
             config.write(file_handle)
@@ -369,6 +389,12 @@ class Bot(ClientXMPP):
             or environ.get("XBOT_PORT", None)
             or "8080"
         )
+        template = (
+            self.args.template
+            or self.config.template
+            or environ.get("XBOT_TEMPLATE", None)
+            or "index.html.j2"
+        )
 
         if not account:
             self.log.error("Unable to discover account")
@@ -390,6 +416,19 @@ class Bot(ClientXMPP):
         self.rooms = rooms
         self.no_auto_join = no_auto_join
         self.port = port
+        self.template = self.load_template(template)
+
+    def load_template(self, template):
+        """Load template via Jinja."""
+        if not exists(Path(template).absolute()):
+            return None
+
+        try:
+            loader = FileSystemLoader(searchpath="./")
+            env = Environment(loader=loader)
+            return env.get_template(template)
+        except Exception:
+            self.log.info(f"Unable to load {template}")
 
     def register_xmpp_event_handlers(self):
         """Register functions against specific XMPP event handlers."""

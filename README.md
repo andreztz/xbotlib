@@ -105,13 +105,6 @@ Arguments:
 
 - **request**: the web request
 
-```python
-from xbotlib import Response
-
-def serve(self, request):
-    return Response(text="Hello, World!")
-```
-
 ### SimpleMessage
 
 A simple message interface.
@@ -213,7 +206,8 @@ optional arguments:
   --no-auto-join        Disable automatically joining rooms when invited
   -pt PORT, --port PORT
                         The port to serve from
-
+  -t TEMPLATE, --template TEMPLATE
+                        The template to render
 ```
 
 #### Using the environment
@@ -276,12 +270,17 @@ Your bot will automatically be running a web server at port `8080` when it is
 run. If you're running your bot locally, just visit
 [0.0.0.0:8080](http://0.0.0.0:8080) to see. The default response is just some
 placeholder text. You can write your own responses using the
-[Bot.serve](#botserve) function.
+[Bot.serve](#bot-serve-request) function.
 
 `xbotlib` provides a small wrapper API for
 [Jinja2](https://jinja.palletsprojects.com/en/2.11.x/) which allows you to
 easily template and generate HTML. The web server is provided by
 [aiohttp](https://docs.aiohttp.org/).
+
+The default template search path is `index.html.j2` in the current working
+directory. This can be configured through the usual configuration entrypoints.
+
+Here's a small example.
 
 ```python
 from xbotlib import Response

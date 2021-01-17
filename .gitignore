@@ -11,5 +11,6 @@ __pycache__
 avatar.png
 build/
 dist/
+index.html.j2
 pip-wheel-metadata/
 testbot.py
