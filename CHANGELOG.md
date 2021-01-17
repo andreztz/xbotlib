@@ -1,5 +1,9 @@
 # xbotlib x.x.x (UNRELEASED)
 
+# xbotlib 0.12.1 (2021-01-17)
+
+- Allow to configure port
+
 # xbotlib 0.12.0 (2021-01-17)
 
 - Support running a web server ([#22](https://git.autonomic.zone/decentral1se/xbotlib/issues/22))

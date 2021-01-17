@@ -134,6 +134,11 @@ class Config:
         """Disable auto-join when invited."""
         return self.section.get("no_auto_join", None)
 
+    @property
+    def port(self):
+        """The port to serve from."""
+        return self.section.get("port", None)
+
 
 class Bot(ClientXMPP):
     """XMPP bots for humans."""
@@ -211,6 +216,12 @@ class Bot(ClientXMPP):
             dest="no_auto_join",
             help="Disable automatically joining rooms when invited",
         )
+        self.parser.add_argument(
+            "-pt",
+            "--port",
+            dest="port",
+            help="The port to serve from",
+        )
 
         self.args = self.parser.parse_args()
 
@@ -285,6 +296,13 @@ class Bot(ClientXMPP):
         )
         no_auto_join = input("Disable auto-join on invite? ")
 
+        print(
+            "Please choose the port to serve HTTP from",
+            "(leave empty to choose default value of 8080)",
+            sep="\n",
+        )
+        port = input("Port: ")
+
         print("*" * 79)
 
         config = ConfigParser()
@@ -302,6 +320,8 @@ class Bot(ClientXMPP):
             config[self.name]["auto_join"] = (
                 True if no_auto_join == "y" else False
             )
+        if port:
+            config[self.name]["port"] = port
 
         with open(self.CONFIG_FILE, "w") as file_handle:
             config.write(file_handle)
@@ -343,6 +363,12 @@ class Bot(ClientXMPP):
             or self.config.no_auto_join
             or environ.get("XBOT_NO_AUTO_JOIN", None)
         )
+        port = (
+            self.args.port
+            or self.config.port
+            or environ.get("XBOT_PORT", None)
+            or "8080"
+        )
 
         if not account:
             self.log.error("Unable to discover account")
@@ -363,6 +389,7 @@ class Bot(ClientXMPP):
         self.redis_url = redis_url
         self.rooms = rooms
         self.no_auto_join = no_auto_join
+        self.port = port
 
     def register_xmpp_event_handlers(self):
         """Register functions against specific XMPP event handlers."""
@@ -506,8 +533,8 @@ class Bot(ClientXMPP):
         except AttributeError:
             self.web.add_routes([get("/", self.default_serve)])
 
-        self.log.info("Serving HTTP on port http://0.0.0.0:8080")
-        run_app(self.web, print=None)
+        self.log.info(f"Serving on http://0.0.0.0:{self.port}")
+        run_app(self.web, port=self.port, print=None)
 
     async def default_serve(self, request):
         """Default placeholder text for HTML serving."""

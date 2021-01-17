@@ -209,6 +209,9 @@ optional arguments:
   -r ROOMS [ROOMS ...], --rooms ROOMS [ROOMS ...]
                         Rooms to automatically join
   --no-auto-join        Disable automatically joining rooms when invited
+  -pt PORT, --port PORT
+                        The port to serve from
+
 ```
 
 #### Using the environment
@@ -225,6 +228,7 @@ deployments.
 - **XBOT_REDIS_URL**: Redis key store connection URL
 - **XBOT_ROOMS**: The rooms to automatically join
 - **XBOT_NO_AUTO_JOIN**: Disable auto-joining on invite
+- **XBOT_PORT**: The port to serve from
 
 ### Persistent storage
 
