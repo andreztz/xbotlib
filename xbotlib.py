@@ -8,7 +8,7 @@ from getpass import getpass
 from imghdr import what
 from inspect import cleandoc
 from logging import DEBUG, INFO, basicConfig, getLogger
-from os import environ, getcwd
+from os import environ
 from os.path import exists
 from pathlib import Path
 from sys import exit, stdout
