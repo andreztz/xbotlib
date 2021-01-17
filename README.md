@@ -33,6 +33,7 @@ on and are still going on in
     - [Using the command-line interface](#using-the-command-line-interface)
     - [Using the environment](#using-the-environment)
   - [Persistent storage](#persistent-storage)
+    - [File system](#file-system)
     - [Redis key/value storage](#redis-key-value-storage)
   - [Loading Plugins](#loading-plugins)
   - [Serving HTTP](#serving-http)
@@ -227,6 +228,13 @@ deployments.
 - **XBOT_PORT**: The port to serve from
 
 ### Persistent storage
+
+#### File system
+
+Just use your local file system as you would in any other Python script. Please
+note that when you deploy your bot, you might not have access to this local
+filesystem in the same location. For remote server deployments
+[Redis](#redis-key-value-storage) can be more convenient.
 
 #### Redis key/value storage
 
