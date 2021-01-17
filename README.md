@@ -71,6 +71,8 @@ the account details that your bot will be using. This will generate an
 
 Read more in the [API reference](#api-reference) for how to write your own bots.
 
+See more examples on [git.vvvvvvaria.org](https://git.vvvvvvaria.org/explore/repos?q=xbotlib&topic=1).
+
 ## API Reference
 
 When writing your own bot, you always sub-class the `Bot` class provided from
