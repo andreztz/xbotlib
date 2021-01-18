@@ -518,9 +518,9 @@ class Bot(ClientXMPP):
 
         miss = message.type not in self.GROUP_MESSAGE_TYPES
         loop = message.nick == self.nick
-        other = self.nick not in message.text
+        other = self.nick not in message.text and not message.url
 
-        if miss or loop or other:
+        if miss or other or loop:
             return
 
         if message.content.startswith("@"):

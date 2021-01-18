@@ -1,5 +1,9 @@
 # xbotlib x.x.x (UNRELEASED)
 
+# xbotlib 0.12.4 (2021-01-18)
+
+- Allow `Bot.group` to respond to file uploads ([#32](https://git.autonomic.zone/decentral1se/xbotlib/issues/32))
+
 # xbotlib 0.12.3 (2021-01-17)
 
 - Support OOB URLs in `SimpleMessage`
