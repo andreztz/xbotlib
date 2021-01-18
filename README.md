@@ -263,8 +263,9 @@ def direct(self, message):
 ```
 
 You should see `INFO Successfully connected to storage` when your bot
-initialises. Please see the `GlossBot` example for more on how to work with
-this type of storage.
+initialises. Please see the
+[redis-py](https://redis-py.readthedocs.io/en/stable/) API documentation for
+more.
 
 ### Loading Plugins
 
