@@ -513,8 +513,9 @@ class Bot(ClientXMPP):
         """Handle group chat message events."""
         message = SimpleMessage(message, self)
 
-        if message.text.startswith("@"):
-            return self.meta(message, room=message.room)
+        if "@" in message.text:
+            if self.meta(message, room=message.room):
+                return
 
         miss = message.type not in self.GROUP_MESSAGE_TYPES
         loop = message.nick == self.nick
@@ -523,7 +524,7 @@ class Bot(ClientXMPP):
         if miss or other or loop:
             return
 
-        if message.content.startswith("@"):
+        if "@" in message.content:
             if self.command(message, room=message.room):
                 return
 
@@ -613,14 +614,14 @@ class Bot(ClientXMPP):
 
     def meta(self, message, **kwargs):
         """Handle meta command invocations."""
-        if message.text.startswith("@bots"):
+        if "@bots" in message.text:
             return self.reply("🖐️", **kwargs)
 
     def command(self, message, **kwargs):
         """Handle command invocations."""
-        if message.content.startswith("@uptime"):
+        if "@uptime" in message.content:
             return self.reply(self.uptime, **kwargs)
-        elif message.content.startswith("@help"):
+        elif "@help" in message.content:
             try:
                 return self.reply(cleandoc(self.help), **kwargs)
             except AttributeError:

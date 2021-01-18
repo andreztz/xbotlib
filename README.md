@@ -148,6 +148,9 @@ There are also more general status commands which all bots respond to.
 
 - `@bots`: status check on who is a bot in the group chat
 
+These commands will be detected in any part of the message sent to the bot. So
+you can write `echobot, can we see your @uptime`, or `I'd love to know which @bots are here.`
+
 ### Avatars
 
 By default, `xbotlib` will look for an `avatar.png` (so far tested with `.png`
