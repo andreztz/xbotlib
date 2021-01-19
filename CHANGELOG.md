@@ -1,5 +1,9 @@
 # xbotlib x.x.x (UNRELEASED)
 
+# xbotlib 0.13.1 (2021-01-19)
+
+- Document `Bot` attributes/functions ([#35](https://git.autonomic.zone/decentral1se/xbotlib/issues/35))
+
 # xbotlib 0.13.0 (2021-01-18)
 
 - Allow commands to be detected in all parts of the message

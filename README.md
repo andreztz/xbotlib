@@ -24,6 +24,7 @@ on and are still going on in
   - [Bot.group(message)](#bot-group-message)
   - [Bot.serve(request)](#bot-serve-request)
   - [SimpleMessage](#simplemessage)
+  - [Bot](#bot)
 - [Working with your bot](#working-with-your-bot)
   - [Documentation](#documentation)
   - [Commands](#commands)
@@ -120,6 +121,22 @@ Attributes:
 - **nick**: the nickname of the sender
 - **type**: the type of message
 - **url**: The URL of a sent file
+
+### Bot
+
+> Bot.reply(message, to=None, room=None)
+
+Send a reply back.
+
+Arguments:
+
+- **message**: the message that is sent
+- **to**: the user to send the reply to
+- **room**: the room to send the reply to
+
+Other useful attributes on the `Bot` class are:
+
+- **self.db**: The [Redis database](#redis-key-value-storage) if you're using it
 
 ## Working with your bot
 
