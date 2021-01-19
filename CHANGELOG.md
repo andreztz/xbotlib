@@ -1,5 +1,9 @@
 # xbotlib x.x.x (UNRELEASED)
 
+# xbotlib 0.14.0 (2021-01-19)
+
+- Reduce generated config flow to only mandatory options
+
 # xbotlib 0.13.1 (2021-01-19)
 
 - Document `Bot` attributes/functions ([#35](https://git.autonomic.zone/decentral1se/xbotlib/issues/35))
