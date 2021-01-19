@@ -134,6 +134,15 @@ Arguments:
 - **to**: the user to send the reply to
 - **room**: the room to send the reply to
 
+> Bot.respond(response, content_type="text/html")
+
+Return a response via the web server.
+
+Arguments:
+
+- **response**: the text of the response
+- **content_type**: the type of response
+
 Other useful attributes on the `Bot` class are:
 
 - **self.db**: The [Redis database](#redis-key-value-storage) if you're using it
@@ -318,12 +327,11 @@ Here's a small example that renders a random ASCII letter.
 
 ```python
 from string import ascii_letters
-from xbotlib import Response
 
 def serve(self, request):
     letter = choice(ascii_letters)
     rendered = self.template.render(letter=letter)
-    return Response(body=rendered, content_type="text/html")
+    return self.respond(body=rendered)
 ```
 
 If you want to pass data from your `direct`/`group` functions to the `serve`

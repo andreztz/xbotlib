@@ -626,3 +626,7 @@ class Bot(ClientXMPP):
                 return self.reply(cleandoc(self.help), **kwargs)
             except AttributeError:
                 return self.reply("No help found 🤔️", **kwargs)
+
+    def respond(self, response, content_type="text/html"):
+        """Send this response back with the web server."""
+        return Response(response, content_type=content_type)

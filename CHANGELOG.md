@@ -3,6 +3,7 @@
 # xbotlib 0.13.1 (2021-01-19)
 
 - Document `Bot` attributes/functions ([#35](https://git.autonomic.zone/decentral1se/xbotlib/issues/35))
+- Provide a `Bot.respond` function ([#34](https://git.autonomic.zone/decentral1se/xbotlib/issues/34))
 
 # xbotlib 0.13.0 (2021-01-18)
 
