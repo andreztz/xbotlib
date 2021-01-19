@@ -60,10 +60,10 @@ from xbotlib import Bot
 class EchoBot(Bot):
 
     def direct(self, message):
-        self.reply(message.text, to=message.sender)
+        return self.reply(message.text, to=message.sender)
 
     def group(self, message):
-        self.reply(message.content, room=message.room)
+        return self.reply(message.content, room=message.room)
 ```
 
 And then `python echo.py`. You will be asked a few questions in order to load
