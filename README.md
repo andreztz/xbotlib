@@ -205,7 +205,7 @@ Here is an example of a working configuration.
 account = echobot@vvvvvvaria.org
 password = ...thepassword...
 nick = echobot
-rooms = test@muc.example.com
+rooms = test1@muc.example.com, test2@muc.example.com
 ```
 
 #### Using the command-line interface
