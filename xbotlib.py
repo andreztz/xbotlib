@@ -133,7 +133,7 @@ class Config:
         if rooms is None:
             return None
 
-        return rooms.split(",")
+        return [room.strip() for room in rooms.split(",")]
 
     @property
     def no_auto_join(self):

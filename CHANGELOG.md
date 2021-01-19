@@ -3,6 +3,7 @@
 # xbotlib 0.14.0 (2021-01-19)
 
 - Reduce generated config flow to only mandatory options
+- Fix support for multiple rooms in configuration file ([#33](https://git.autonomic.zone/decentral1se/xbotlib/issues/33))
 
 # xbotlib 0.13.1 (2021-01-19)
 
