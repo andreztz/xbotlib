@@ -17,6 +17,10 @@ borrowed/stolen/adapted/reimagined from the XMPP bot experiments that have gone
 on and are still going on in
 [Varia](https://git.vvvvvvaria.org/explore/repos?tab=&sort=recentupdate&q=bots).
 
+We're lurking in
+[xbotlibtest@muc.vvvvvvaria.org](xmpp:xbotlibtest@muc.vvvvvvaria.org?join) if
+you want to chat or just invite your bots for testing.
+
 - [Install](#install)
 - [Example](#example)
 - [API Reference](#api-reference)
