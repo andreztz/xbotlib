@@ -562,4 +562,4 @@ class Bot(ClientXMPP):
 
     def respond(self, response, content_type="text/html"):
         """Send this response back with the web server."""
-        return Response(response, content_type=content_type)
+        return Response(text=response, content_type=content_type)

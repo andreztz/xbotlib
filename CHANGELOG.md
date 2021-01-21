@@ -1,5 +1,9 @@
 # xbotlib x.x.x (UNRELEASED)
 
+# xbotlib 0.14.1 (2021-01-21)
+
+- Fix response handling for web serving
+
 # xbotlib 0.14.0 (2021-01-19)
 
 - Reduce generated config flow to only mandatory options
