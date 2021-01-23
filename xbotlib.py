@@ -184,7 +184,7 @@ class Bot(ClientXMPP):
         self.parser.add_argument(
             "-d",
             "--debug",
-            help="Enable verbose debug logs",
+            help="enable verbose debug logs",
             action="store_const",
             dest="log_level",
             const=DEBUG,
@@ -194,48 +194,49 @@ class Bot(ClientXMPP):
             "-a",
             "--account",
             dest="account",
-            help="Account for the bot account",
+            help="account for the bot account",
         )
         self.parser.add_argument(
             "-p",
             "--password",
             dest="password",
-            help="Password for the bot account",
+            help="password for the bot account",
         )
         self.parser.add_argument(
             "-n",
             "--nick",
             dest="nick",
-            help="Nickname for the bot account",
+            help="nickname for the bot account",
         )
         self.parser.add_argument(
-            "-av", "--avatar", dest="avatar", help="Avatar for the bot account"
+            "-av", "--avatar", dest="avatar", help="avatar for the bot account"
         )
         self.parser.add_argument(
             "-ru",
             "--redis-url",
             dest="redis_url",
-            help="Redis storage connection URL",
+            help="redis storage connection URL",
         )
         self.parser.add_argument(
             "-r",
             "--rooms",
             dest="rooms",
             nargs="+",
-            help="Rooms to automatically join",
+            help="rooms to automatically join",
         )
         self.parser.add_argument(
+            "-naj",
             "--no-auto-join",
             default=False,
             action="store_true",
             dest="no_auto_join",
-            help="Disable automatically joining rooms when invited",
+            help="disable automatically joining rooms when invited",
         )
         self.parser.add_argument(
             "-pt",
             "--port",
             dest="port",
-            help="The port to serve from",
+            help="the port to serve from",
         )
         self.parser.add_argument(
             "-t",
