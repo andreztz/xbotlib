@@ -342,7 +342,9 @@ def serve(self, request):
 ```
 
 Please note the use of the `return` keyword here. The `serve` function must
-return a response that will be passed to the web server.
+return a response that will be passed to the web server. This function can
+return any content type that you might find on the web (e.g. HTML, XML, JSON)
+but you must specify the `content_type=...` keyword argument for `respond`.
 
 If you want to pass data from your `direct`/`group` functions to the `serve`
 function, you'll need to make use of [some type of persistent
