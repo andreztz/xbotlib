@@ -64,10 +64,10 @@ from xbotlib import Bot
 class EchoBot(Bot):
 
     def direct(self, message):
-        return self.reply(message.text, to=message.sender)
+        self.reply(message.text, to=message.sender)
 
     def group(self, message):
-        return self.reply(message.content, room=message.room)
+        self.reply(message.content, room=message.room)
 ```
 
 And then `python echo.py`. You will be asked a few questions in order to load
@@ -331,6 +331,9 @@ def serve(self, request):
     rendered = self.template.render(letter=letter)
     return self.respond(rendered)
 ```
+
+Please note the use of the `return` keyword here. The `serve` function must
+return a response that will be passed to the web server.
 
 If you want to pass data from your `direct`/`group` functions to the `serve`
 function, you'll need to make use of [some type of persistent
