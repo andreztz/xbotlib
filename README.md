@@ -301,6 +301,8 @@ class MyBot(Bot):
     plugins = ["xep_0066"]
 ```
 
+See [here](https://slixmpp.readthedocs.io/xeps.html) for the list of supported plugins.
+
 ### Serving HTTP
 
 Your bot will run a web server if you configure it to do so. Use the `--serve`
