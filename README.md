@@ -202,15 +202,18 @@ If you run simply run your Python script which contains the bot then `xbotlib`
 will generate a configuration for you by asking a few questions. This is the
 simplest way to run your bot locally.
 
-- **account**: The account of the bot
-- **password**: The password of the bot account
-- **nick**: The nickname of the bot
-- **avatar**: The avatar of the bot
-- **redis_url**: The Redis connection URL
-- **rooms**: A list of rooms to automatically join
-- **no_auto_join**: Disable auto-join when invited
-- **template**: The port to serve from
-- **serve**: Turn on the web server
+- **account**: the account of the bot
+- **password**: the password of the bot account
+- **nick**: the nickname of the bot
+- **avatar**: the avatar of the bot (default: `avatar.png`)
+- **redis_url**: the Redis connection URL
+- **rooms**: a list of rooms to automatically join
+- **no_auto_join**: disable auto-join when invited (default: `False`)
+- **template**: the port to serve from (default: `index.html.j2`)
+- **serve**: turn on the web server (default: `False`)
+- **port**: the port to serve from (default: `8080`)
+- **storage**: storage back-end (default: `file`)
+- **storage_file**: path to file based storage back-end (default: `<nick>.json>`)
 
 #### Using the command-line interface
 
@@ -222,13 +225,15 @@ can use the `--help` option to see what is available (e.g. `python bot.py --help
 - **-a ACCOUNT, --account ACCOUNT**: account for the bot account
 - **-p PASSWORD, --password PASSWORD**: password for the bot account
 - **-n NICK, --nick NICK**: nickname for the bot account
-- **-av AVATAR, --avatar AVATAR**: avatar for the bot account
+- **-av AVATAR, --avatar AVATAR**: avatar for the bot account (default: `avatar.png`)
 - **-ru REDIS_URL, --redis-url REDIS_URL**: redis storage connection URL
 - **-r ROOMS [ROOMS ...], --rooms ROOMS [ROOMS ...]**: Rooms to automatically join
-- **-naj, --no-auto-join**: disable automatically joining rooms when invited
-- **-pt PORT, --port PORT**: the port to serve from
-- **-t TEMPLATE, --template TEMPLATE**: the template to render
-- **-s, --serve**: turn on the web server
+- **-naj, --no-auto-join**: disable automatically joining rooms when invited (default: `False`)
+- **-pt PORT, --port PORT**: the port to serve from (default: `8080`)
+- **-t TEMPLATE, --template TEMPLATE**: the template to render (default: `index.html.j2`)
+- **-s, --serve**: turn on the web server (default: `False`)
+- **-st {file,redis}, --storage {file,redis}**: choice of storage back-end (default: `file`)
+- **-stf STORAGE_FILE, --storage-file STORAGE_FILE**: path to file based storage back-end (default: `<nick>.json`)
 
 #### Using the environment
 
@@ -240,12 +245,15 @@ deployments.
 - **XBOT_ACCOUNT**: The bot account
 - **XBOT_PASSWORD**: The bot password
 - **XBOT_NICK**: The bot nickname
-- **XBOT_AVATAR**: The bot avatar icon
+- **XBOT_AVATAR**: The bot avatar icon (default: `avatar.png`)
 - **XBOT_REDIS_URL**: Redis key store connection URL
 - **XBOT_ROOMS**: The rooms to automatically join
-- **XBOT_NO_AUTO_JOIN**: Disable auto-joining on invite
-- **XBOT_SERVE**: Turn on the web server
-- **XBOT_PORT**: The port to serve from
+- **XBOT_NO_AUTO_JOIN**: Disable auto-joining on invite (default: `False`)
+- **XBOT_TEMPLATE**: the template to render (default: `index.html.j2`)
+- **XBOT_SERVE**: Turn on the web server (default: `False`)
+- **XBOT_PORT**: The port to serve from (default: `8080`)
+- **XBOT_STORAGE**: choice of storage back-end (default: `file`)
+- **XBOT_STORAGE_FILE**: path to file based storage back-end (default: `<nick>.json`)
 
 ### Persistent storage
 
