@@ -265,21 +265,46 @@ class Bot(ClientXMPP):
 
     def generate_config_interactively(self):
         """Generate bot configuration."""
-        print("*" * 79)
         print(
-            "Please enter the XMPP user account of your bot. ",
-            "This is often referred to as the JID (Jabbed ID). ",
-            "An example would be echobot@vvvvvvaria.org",
+            "Please enter the XMPP user account of your bot",
+            "This is often referred to as the JID (Jabber ID)",
+            "An example: echobot@vvvvvvaria.org",
+            "See https://xmpp-servers.404.city to make an account",
             sep="\n",
         )
         account = input("Account: ")
 
         print("Please enter the password for your bot account")
         password = getpass("Password: ")
-        print("*" * 79)
+
+        print(
+            "Please enter the nickname for your bot",
+            "Others will use this name to refer to the bot",
+            sep="\n",
+        )
+        nick = input("Nickname: ")
+
+        print(
+            "Please list the rooms you want your bot to automatically join",
+            "An example: room1@muc.example.com, room2@muc.example.com",
+            "If your bot only responds to direct messages, leave it blank",
+            sep="\n",
+        )
+        rooms = input("Rooms: ")
+
+        if rooms:
+            rooms = [r.strip() for r in rooms.split(",")]
+
+        inputs = {
+            "account": account,
+            "password": password,
+            "nick": nick,
+            "rooms": rooms,
+        }
+        self.log.debug(f"Received {inputs} as input")
 
         config = ConfigParser()
-        config[self.name] = {"account": account, "password": password}
+        config[self.name] = inputs
 
         with open(self.CONFIG_FILE, "w") as file_handle:
             config.write(file_handle)
