@@ -11,8 +11,7 @@ A friendly lightweight wrapper around
 [slixmpp](https://slixmpp.readthedocs.io/) for writing XMPP bots in Python. The
 goal is to make writing and running XMPP bots easy and fun. `xbotlib` is a
 [single file implementation](./xbotlib.py) which can easily be understood and
-extended. It provides a small API surface which reflects the `slixmpp` way of
-doing things. The `xbotlib` source code and ideas are largely
+extended. The `xbotlib` source code and ideas are largely
 borrowed/stolen/adapted/reimagined from the XMPP bot experiments that have gone
 on and are still going on in
 [Varia](https://git.vvvvvvaria.org/explore/repos?tab=&sort=recentupdate&q=bots).
