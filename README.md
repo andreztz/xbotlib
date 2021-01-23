@@ -278,7 +278,8 @@ $ cat mybot.json
 For more advanced use cases, `xbotlib` also supports [Redis](https://redis.io/)
 as a storage back-end. You'll need to configure this (e.g. `--storage redis`)
 as the default uses the filesystem approach mentioned above. The same `self.db`
-will then be passed as a Redis connection object.
+will then be passed as a Redis connection object. You will also need to install
+additional dependencies using `pip install xbotlib[redis]`.
 
 ### Loading Plugins
 
@@ -293,6 +294,12 @@ class MyBot(Bot):
 See [here](https://slixmpp.readthedocs.io/xeps.html) for the list of supported plugins.
 
 ### Serving HTTP
+
+Firstly, you'll need to install additional dependencies.
+
+```bash
+$ pip install xbotlib[web]
+```
 
 Your bot will run a web server if you configure it to do so. Use the `--serve`
 option on the command-line, the `serve = True` configuration option or the

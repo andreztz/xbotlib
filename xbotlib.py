@@ -14,10 +14,7 @@ from os.path import exists
 from pathlib import Path
 from sys import exit, stdout
 
-from aiohttp.web import Application, Response, get, run_app
 from humanize import naturaldelta
-from jinja2 import Environment, FileSystemLoader
-from redis import Redis
 from slixmpp import ClientXMPP
 
 
@@ -434,8 +431,8 @@ class Bot(ClientXMPP):
         self.rooms = rooms
         self.no_auto_join = no_auto_join
         self.port = port
-        self.template = self.load_template(template)
         self.serve = serve
+        self.template = self.load_template(template) if self.serve else None
         self.storage = storage
         self.storage_file = Path(storage_file).absolute()
 
@@ -443,6 +440,13 @@ class Bot(ClientXMPP):
         """Load template via Jinja."""
         if not exists(Path(template).absolute()):
             return None
+
+        try:
+            from jinja2 import Environment, FileSystemLoader
+        except ModuleNotFoundError:
+            print("Missing required dependency: jinja2")
+            print("Have you tried `pip install xbotlib[web]`")
+            exit(1)
 
         try:
             loader = FileSystemLoader(searchpath="./")
@@ -578,11 +582,17 @@ class Bot(ClientXMPP):
                 exit(1)
         else:
             try:
+                from redis import Redis
+
                 self.db = Redis.from_url(self.redis_url, decode_responses=True)
                 return self.log.info("Successfully connected to Redis storage")
             except ValueError as exception:
                 message = f"Failed to connect to Redis storage: {exception}"
                 self.log.info(message)
+                exit(1)
+            except ModuleNotFoundError:
+                print("missing required dependency using Redis")
+                print("Have you tried `pip install xbotlib[redis]`")
                 exit(1)
 
     def run(self):
@@ -628,6 +638,13 @@ class Bot(ClientXMPP):
 
     async def default_serve(self, request):
         """Default placeholder text for HTML serving."""
+        try:
+            from aiohttp.web import Response
+        except ModuleNotFoundError:
+            print("Missing required dependency: aiohttp")
+            print("Have you tried `pip install xbotlib[web]`")
+            exit(1)
+
         return Response(text=f"{self.nick} is alive and well")
 
     def reply(self, text, to=None, room=None):
@@ -673,4 +690,11 @@ class Bot(ClientXMPP):
 
     def respond(self, response, content_type="text/html"):
         """Send this response back with the web server."""
+        try:
+            from aiohttp.web import Response
+        except ModuleNotFoundError:
+            print("Missing required dependency: aiohttp")
+            print("Have you tried `pip install xbotlib[web]`")
+            exit(1)
+
         return Response(text=response, content_type=content_type)

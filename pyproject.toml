@@ -17,14 +17,18 @@ keywords = []
 python = "^3.6"
 slixmpp = "^1.6.0"
 humanize = "^3.2.0"
-redis = "^3.5.3"
-Jinja2 = "^2.11.2"
-aiohttp = "^3.7.3"
+redis = {version = "^3.5.3", optional = true}
+aiohttp = {version = "^3.7.3", optional = true}
+Jinja2 = {version = "^2.11.2", optional = true}
 
 [tool.poetry.dev-dependencies]
 black = "^19.10b0"
 flake8 = "^3.8.3"
 isort = "^5.0.2"
+
+[tool.poetry.extras]
+redis = ["redis"]
+web = ["aiohttp", "jinja2"]
 
 [tool.black]
 line-length = 80
