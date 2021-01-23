@@ -1,5 +1,12 @@
 # xbotlib x.x.x (UNRELEASED)
 
+# xbotlib 0.15.0 (2021-01-23)
+
+- Fix configuration generation to cover mandatory options ([#1](https://git.vvvvvvaria.org/decentral1se/xbotlib/issues/1))
+- Add `--serve` flag to turn on web serving ([#2](https://git.vvvvvvaria.org/decentral1se/xbotlib/issues/2))
+- Document `return` statement semantics ([#6](https://git.vvvvvvaria.org/decentral1se/xbotlib/issues/6))
+- Make file system the first-class storage option ([#3](https://git.vvvvvvaria.org/decentral1se/xbotlib/issues/3))
+
 # xbotlib 0.14.1 (2021-01-21)
 
 - Fix response handling for web serving
