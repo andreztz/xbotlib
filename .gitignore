@@ -1,5 +1,6 @@
 *.conf
 *.egg-info/
+*.json
 *.pyc
 .avatars
 .coverage

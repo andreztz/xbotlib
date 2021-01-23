@@ -36,7 +36,7 @@ you want to chat or just invite your bots for testing.
     - [Using the `.conf` configuration file](#using-the--conf--configuration-file)
     - [Using the command-line interface](#using-the-command-line-interface)
     - [Using the environment](#using-the-environment)
-  - [Persistent storage](#persistent-storage)
+  - [Storage back-end](#storage-back-end)
     - [File system](#file-system)
     - [Redis key/value storage](#redis-key-value-storage)
   - [Loading Plugins](#loading-plugins)
@@ -255,46 +255,35 @@ deployments.
 - **XBOT_STORAGE**: choice of storage back-end (default: `file`)
 - **XBOT_STORAGE_FILE**: path to file based storage back-end (default: `<nick>.json`)
 
-### Persistent storage
+### Storage back-end
 
-#### File system
-
-Just use your local file system as you would in any other Python script. Please
-note that when you deploy your bot, you might not have access to this local
-filesystem in the same location. For remote server deployments
-[Redis](#redis-key-value-storage) can be more convenient.
-
-#### Redis key/value storage
-
-`xbotlib` supports using [Redis](https://redis.io/) as a storage back-end. It
-is simple to work with because the interface is exactly like a dictionary. You
-can quickly run Redis locally using [Docker](https://docs.docker.com/engine/install/debian/)
-(`docker run --network=host --name redis -d redis`) or if you're on a Debian system you can
-also `sudo apt install -y redis`.
-
-You can configure the connection URL using the command-line interface,
-configuration or environment. Here is an example using the environment.
-
-```bash
-$ export XBOT_REDIS_URL=redis://localhost:6379/0
-```
-
-And you access the interface via the `self.db` attribute.
+In order to store data you can make use of the `self.db` attribute of the `Bot`
+class. It is a Python dictionary which will be saved to disk automatically for
+you as a `<nick>.json` in your current working directory. The name and path to
+this file can be configured.
 
 ```python
-def direct(self, message):
-    self.db["mykey"] = message.text
+def group(self, message):
+    if not message.room in self.db.keys():
+        self.db[message.room] = "visited"
 ```
 
-You should see `INFO Successfully connected to storage` when your bot
-initialises. Please see the
-[redis-py](https://redis-py.readthedocs.io/en/stable/) API documentation for
-more.
+If you want to inspect the database when the bot is not running, you can look
+in the file directly.
+
+```bash
+$ cat mybot.json
+```
+
+For more advanced use cases, `xbotlib` also supports [Redis](https://redis.io/)
+as a storage back-end. You'll need to configure this (e.g. `--storage redis`)
+as the default uses the filesystem approach mentioned above. The same `self.db`
+will then be passed as a Redis connection object.
 
 ### Loading Plugins
 
 You can specify a `plugins = [...]` on your bot definition and they will be
-automatically loaded.
+automatically loaded when you start your bot.
 
 ```python
 class MyBot(Bot):

@@ -7,6 +7,7 @@ from datetime import datetime as dt
 from getpass import getpass
 from imghdr import what
 from inspect import cleandoc
+from json import dumps, loads
 from logging import DEBUG, INFO, basicConfig, getLogger
 from os import environ
 from os.path import exists
@@ -155,6 +156,16 @@ class Config:
         """Turn on the web server."""
         return self.section.get("serve", None)
 
+    @property
+    def storage(self):
+        """Choice of storage back-end."""
+        return self.section.get("storage", None)
+
+    @property
+    def storage_file(self):
+        """Path to the file based storage back-end."""
+        return self.section.get("storage_file", None)
+
 
 class Bot(ClientXMPP):
     """XMPP bots for humans."""
@@ -174,7 +185,7 @@ class Bot(ClientXMPP):
         self.init_bot()
         self.register_xmpp_event_handlers()
         self.register_xmpp_plugins()
-        self.init_db()
+        self.init_storage()
         self.run()
 
     def parse_arguments(self):
@@ -251,6 +262,19 @@ class Bot(ClientXMPP):
             action="store_true",
             dest="serve",
             help="turn on the web server",
+        )
+        self.parser.add_argument(
+            "-st",
+            "--storage",
+            dest="storage",
+            help="choice of storage back-end",
+            choices=("file", "redis"),
+        )
+        self.parser.add_argument(
+            "-stf",
+            "--storage-file",
+            dest="storage_file",
+            help="path to file based storage back-end",
         )
 
         self.args = self.parser.parse_args()
@@ -377,6 +401,18 @@ class Bot(ClientXMPP):
             or self.config.serve
             or environ.get("XBOT_SERVE", None)
         )
+        storage = (
+            self.args.storage
+            or self.config.storage
+            or environ.get("XBOT_STORAGE", None)
+            or "file"
+        )
+        storage_file = (
+            self.args.storage_file
+            or self.config.storage_file
+            or environ.get("XBOT_STORAGE_FILE", None)
+            or f"{nick}.json"
+        )
 
         if not account:
             self.log.error("Unable to discover account")
@@ -400,6 +436,8 @@ class Bot(ClientXMPP):
         self.port = port
         self.template = self.load_template(template)
         self.serve = serve
+        self.storage = storage
+        self.storage_file = Path(storage_file).absolute()
 
     def load_template(self, template):
         """Load template via Jinja."""
@@ -526,17 +564,26 @@ class Bot(ClientXMPP):
         except AttributeError:
             self.log.info("No additional plugins loaded")
 
-    def init_db(self):
-        """Initialise the Redis key/value store."""
-        if not self.redis_url:
-            self.db = None
-            return self.log.info("No Redis storage discovered")
-
-        try:
-            self.db = Redis.from_url(self.redis_url, decode_responses=True)
-            self.log.info("Successfully connected to Redis storage")
-        except ValueError:
-            self.log.info("Failed to connect to Redis storage")
+    def init_storage(self):
+        """Initialise the storage back-end."""
+        if self.storage == "file":
+            try:
+                self.db = {}
+                if exists(self.storage_file):
+                    self.db = loads(open(self.storage_file, "r").read())
+                self.log.info("Successfully loaded file storage")
+            except Exception as exception:
+                message = f"Failed to load {self.storage_file}: {exception}"
+                self.log.info(message)
+                exit(1)
+        else:
+            try:
+                self.db = Redis.from_url(self.redis_url, decode_responses=True)
+                return self.log.info("Successfully connected to Redis storage")
+            except ValueError as exception:
+                message = f"Failed to connect to Redis storage: {exception}"
+                self.log.info(message)
+                exit(1)
 
     def run(self):
         """Run the bot."""
@@ -548,7 +595,17 @@ class Bot(ClientXMPP):
                 self.serve_web()
             self.process(forever=False)
         except (KeyboardInterrupt, RuntimeError):
-            pass
+            if self.storage != "file":
+                exit(0)
+
+            try:
+                with open(self.storage_file, "w") as handle:
+                    handle.write(dumps(self.db))
+                self.log.info("Successfully saved file storage")
+            except Exception as exception:
+                message = f"Failed to save file storage: {exception}"
+                self.log.info(message)
+                exit(1)
 
     def serve_web(self):
         """Serve the web."""
