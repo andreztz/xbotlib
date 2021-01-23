@@ -194,7 +194,8 @@ of `64` and a width of `64` pixels each.
 All the ways you can pass configuration details to your bot. There are three
 ways to configure your bot, the configuration file, command-line interface and
 the environment. Use whichever one suits you best. The values are loaded in the
-following order: command-line > configuration file > environment.
+following order: command-line > configuration file > environment. This means
+you can override everything from the command-line easily.
 
 #### Using the `.conf` configuration file
 
@@ -202,48 +203,33 @@ If you run simply run your Python script which contains the bot then `xbotlib`
 will generate a configuration for you by asking a few questions. This is the
 simplest way to run your bot locally.
 
-Here is an example of a working configuration.
-
-```conf
-[echobot]
-account = echobot@vvvvvvaria.org
-password = ...thepassword...
-nick = echobot
-rooms = test1@muc.example.com, test2@muc.example.com
-```
+- **account**: The account of the bot
+- **password**: The password of the bot account
+- **nick**: The nickname of the bot
+- **avatar**: The avatar of the bot
+- **redis_url**: The Redis connection URL
+- **rooms**: A list of rooms to automatically join
+- **no_auto_join**: Disable auto-join when invited
+- **template**: The port to serve from
+- **serve**: Turn on the web server
 
 #### Using the command-line interface
 
 Every bot accepts a number of comand-line arguments to load configuration. You
 can use the `--help` option to see what is available (e.g. `python bot.py --help`).
 
-```
-usage: bot.py [-h] [-d] [-a ACCOUNT] [-p PASSWORD] [-n NICK]
-              [-av AVATAR] [-ru REDIS_URL] [-r ROOMS [ROOMS ...]]
-              [--no-auto-join]
-
-XMPP bots for humans
-
-optional arguments:
-  -h, --help            show this help message and exit
-  -d, --debug           Enable verbose debug logs
-  -a ACCOUNT, --account ACCOUNT
-                        Account for the bot account
-  -p PASSWORD, --password PASSWORD
-                        Password for the bot account
-  -n NICK, --nick NICK  Nickname for the bot account
-  -av AVATAR, --avatar AVATAR
-                        Avatar for the bot account
-  -ru REDIS_URL, --redis-url REDIS_URL
-                        Redis storage connection URL
-  -r ROOMS [ROOMS ...], --rooms ROOMS [ROOMS ...]
-                        Rooms to automatically join
-  --no-auto-join        Disable automatically joining rooms when invited
-  -pt PORT, --port PORT
-                        The port to serve from
-  -t TEMPLATE, --template TEMPLATE
-                        The template to render
-```
+- **-h, --help**: show this help message and exit
+- **-d, --debug**: enable verbose debug logs
+- **-a ACCOUNT, --account ACCOUNT**: account for the bot account
+- **-p PASSWORD, --password PASSWORD**: password for the bot account
+- **-n NICK, --nick NICK**: nickname for the bot account
+- **-av AVATAR, --avatar AVATAR**: avatar for the bot account
+- **-ru REDIS_URL, --redis-url REDIS_URL**: redis storage connection URL
+- **-r ROOMS [ROOMS ...], --rooms ROOMS [ROOMS ...]**: Rooms to automatically join
+- **-naj, --no-auto-join**: disable automatically joining rooms when invited
+- **-pt PORT, --port PORT**: the port to serve from
+- **-t TEMPLATE, --template TEMPLATE**: the template to render
+- **-s, --serve**: turn on the web server
 
 #### Using the environment
 
@@ -259,6 +245,7 @@ deployments.
 - **XBOT_REDIS_URL**: Redis key store connection URL
 - **XBOT_ROOMS**: The rooms to automatically join
 - **XBOT_NO_AUTO_JOIN**: Disable auto-joining on invite
+- **XBOT_SERVE**: Turn on the web server
 - **XBOT_PORT**: The port to serve from
 
 ### Persistent storage
@@ -309,8 +296,11 @@ class MyBot(Bot):
 
 ### Serving HTTP
 
-Your bot will automatically be running a web server at port `8080` when it is
-run. If you're running your bot locally, just visit
+Your bot will run a web server if you configure it to do so. Use the `--serve`
+option on the command-line, the `serve = True` configuration option or the
+`XBOT_SERVE=True` environment variable.
+
+If you're running your bot locally, just visit
 [0.0.0.0:8080](http://0.0.0.0:8080) to see. The default response is just some
 placeholder text. You can write your own responses using the
 [Bot.serve](#bot-serve-request) function.
@@ -325,9 +315,13 @@ directory. This can be configured through the usual configuration entrypoints.
 
 Here's a small example that renders a random ASCII letter.
 
+> index.html.j2
+
 ```jinja
 <h1>{{ letter }}</h1>
 ```
+
+> bot.py
 
 ```python
 from string import ascii_letters
@@ -335,17 +329,13 @@ from string import ascii_letters
 def serve(self, request):
     letter = choice(ascii_letters)
     rendered = self.template.render(letter=letter)
-    return self.respond(body=rendered)
+    return self.respond(rendered)
 ```
 
 If you want to pass data from your `direct`/`group` functions to the `serve`
 function, you'll need to make use of [some type of persistent
-storage](#persistent-storage). Your `serve` function can read from the database
-or file system and then respond with generated HTML from there.
-
-Having your bot avaible on the web is useful for doing healthchecks with
-something like [statping](https://statping.com/) so you be sure that your bot
-is up and running.
+storage](#persistent-storage). Your `serve` function can read from the storage
+back-end and then respond.
 
 ## Deploy your bots
 
