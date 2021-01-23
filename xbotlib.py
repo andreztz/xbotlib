@@ -609,11 +609,18 @@ class Bot(ClientXMPP):
 
     def serve_web(self):
         """Serve the web."""
+        try:
+            from aiohttp.web import Application, get, run_app
+        except ModuleNotFoundError:
+            print("Missing required dependency: aiohttp")
+            print("Have you tried `pip install xbotlib[web]`")
+            exit(1)
+
         self.web = Application()
 
         try:
             self.web.add_routes([get("/", self.serve)])
-        except AttributeError:
+        except Exception:
             self.web.add_routes([get("/", self.default_serve)])
 
         self.log.info(f"Serving on http://0.0.0.0:{self.port}")
