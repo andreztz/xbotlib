@@ -150,6 +150,11 @@ class Config:
         """The Jinja template to render."""
         return self.section.get("template", None)
 
+    @property
+    def serve(self):
+        """Turn on the web server."""
+        return self.section.get("serve", None)
+
 
 class Bot(ClientXMPP):
     """XMPP bots for humans."""
@@ -236,7 +241,15 @@ class Bot(ClientXMPP):
             "-t",
             "--template",
             dest="template",
-            help="The template to render",
+            help="the template to render",
+        )
+        self.parser.add_argument(
+            "-s",
+            "--serve",
+            default=False,
+            action="store_true",
+            dest="serve",
+            help="turn on the web server",
         )
 
         self.args = self.parser.parse_args()
@@ -358,6 +371,11 @@ class Bot(ClientXMPP):
             or environ.get("XBOT_TEMPLATE", None)
             or "index.html.j2"
         )
+        serve = (
+            self.args.serve
+            or self.config.serve
+            or environ.get("XBOT_SERVE", None)
+        )
 
         if not account:
             self.log.error("Unable to discover account")
@@ -380,6 +398,7 @@ class Bot(ClientXMPP):
         self.no_auto_join = no_auto_join
         self.port = port
         self.template = self.load_template(template)
+        self.serve = serve
 
     def load_template(self, template):
         """Load template via Jinja."""
@@ -523,7 +542,9 @@ class Bot(ClientXMPP):
         self.connect()
 
         try:
-            self.serve_web()
+            if self.serve:
+                self.log.info("Turning on the web server")
+                self.serve_web()
             self.process(forever=False)
         except (KeyboardInterrupt, RuntimeError):
             pass
