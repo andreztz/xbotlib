@@ -343,12 +343,19 @@ easily template and generate HTML. The web server is provided by
 The default template search path is `index.html.j2` in the current working
 directory. This can be configured through the usual configuration entrypoints.
 
-Here's a small example that renders a random ASCII letter.
+Here's a small example that renders a random ASCII letter and uses a stylesheet.
 
 > index.html.j2
 
 ```jinja
-<h1>{{ letter }}</h1>
+<html>
+<head>
+  <style> h1 { color: red; } </style>
+</head>
+<body>
+  <h1>{{ letter }}</h1>
+</body>
+</html>
 ```
 
 > bot.py

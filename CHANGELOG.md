@@ -4,6 +4,7 @@
 
 - Add `setup` function hook ([#36](https://git.autonomic.zone/decentral1se/xbotlib/issues/36))
 - Add support for defining additional routes ([#31](https://git.autonomic.zone/decentral1se/xbotlib/issues/31))
+- Fix loading of template and serving (attribute clash) ([#38](https://git.autonomic.zone/decentral1se/xbotlib/issues/38))
 
 # xbotlib 0.15.1 (2021-01-24)
 

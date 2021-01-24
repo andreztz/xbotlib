@@ -446,7 +446,7 @@ class Bot(ClientXMPP):
             or environ.get("XBOT_TEMPLATE", None)
             or "index.html.j2"
         )
-        serve = (
+        serve_web = (
             self.args.serve
             or self.config.serve
             or environ.get("XBOT_SERVE", None)
@@ -484,8 +484,12 @@ class Bot(ClientXMPP):
         self.rooms = rooms
         self.no_auto_join = no_auto_join
         self.port = port
-        self.serve = serve
-        self.template = self.load_template(template) if self.serve else None
+        self.serve_web = serve_web
+
+        self.template = None
+        if self.serve_web:
+            self.template = self.load_template(template)
+
         self.storage = storage
         self.storage_file = Path(storage_file).absolute()
 
@@ -670,14 +674,14 @@ class Bot(ClientXMPP):
         self.connect()
 
         try:
-            if self.serve:
-                self.log.info("Turning on the web server")
-                self.serve_web()
+            if self.serve_web:
+                self.log.info("Running the web server")
+                self.run_web_server()
 
             if hasattr(self, "setup"):
                 try:
                     self.setup()
-                    self.log.info("Finished running Bot.setup")
+                    self.log.info("Finished running setup")
                 except Exception as exception:
                     message = f"Bot.setup failed: {exception}"
                     self.log.info(message)
@@ -686,8 +690,8 @@ class Bot(ClientXMPP):
         except (KeyboardInterrupt, RuntimeError):
             pass
 
-    def serve_web(self):
-        """Serve the web."""
+    def run_web_server(self):
+        """Run the web server."""
         try:
             from aiohttp.web import Application, get, run_app
         except ModuleNotFoundError:
@@ -697,9 +701,9 @@ class Bot(ClientXMPP):
 
         self.web = Application()
 
-        try:
+        if hasattr(self, "serve"):
             self.web.add_routes([get("/", self.serve)])
-        except Exception:
+        else:
             self.web.add_routes([get("/", self.default_serve)])
 
         try:
