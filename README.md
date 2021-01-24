@@ -108,6 +108,8 @@ Arguments:
 
 Serve requests via the built-in web server.
 
+See [this section](#serving-http) for more.
+
 Arguments:
 
 - **request**: the web request
