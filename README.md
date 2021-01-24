@@ -391,7 +391,7 @@ Arguments:
 
 Other useful attributes on the `Bot` class are:
 
-- **self.db**: The [Redis database](#redis-key-value-storage) if you're using it
+- **self.db**: The [storage back-end](#storage-back-end)
 
 ## Chatroom
 
