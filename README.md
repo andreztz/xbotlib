@@ -25,6 +25,7 @@ you want to chat or just invite your bots for testing.
   - [Bot.direct(message)](#bot-direct-message)
   - [Bot.group(message)](#bot-group-message)
   - [Bot.serve(request)](#bot-serve-request)
+  - [Bot.setup()](#bot-setup)
   - [SimpleMessage](#simplemessage)
   - [Bot](#bot)
 - [Working with your bot](#working-with-your-bot)
@@ -113,6 +114,10 @@ See [this section](#serving-http) for more.
 Arguments:
 
 - **request**: the web request
+
+### Bot.setup()
+
+Run some setup logic before starting your bot.
 
 ### SimpleMessage
 

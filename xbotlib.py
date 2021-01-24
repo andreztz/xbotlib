@@ -673,6 +673,15 @@ class Bot(ClientXMPP):
             if self.serve:
                 self.log.info("Turning on the web server")
                 self.serve_web()
+
+            if hasattr(self, "setup"):
+                try:
+                    self.setup()
+                    self.log.info("Finished running Bot.setup")
+                except Exception as exception:
+                    message = f"Bot.setup failed: {exception}"
+                    self.log.info(message)
+
             self.process(forever=False)
         except (KeyboardInterrupt, RuntimeError):
             pass

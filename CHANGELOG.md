@@ -1,5 +1,9 @@
 # xbotlib x.x.x (UNRELEASED)
 
+# xbotlib x.x.x (UNRELEASED)
+
+- Add `setup` function hook ([#36](https://git.autonomic.zone/decentral1se/xbotlib/issues/36))
+
 # xbotlib 0.15.1 (2021-01-24)
 
 - Save to file based storage on all writes ([#39](https://git.autonomic.zone/decentral1se/xbotlib/issues/39))
