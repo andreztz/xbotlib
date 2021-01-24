@@ -628,12 +628,17 @@ class Bot(ClientXMPP):
         self.register_plugin("xep_0084")  # User Avatar
         self.register_plugin("xep_0066")  # Proces URIs (files, images)
 
+        if not hasattr(self, "plugins"):
+            self.log.info("No additional plugins loaded")
+            return
+
         try:
             for plugin in self.plugins:
                 self.register_plugin(plugin)
                 self.log.info(f"Loaded {plugin}")
-        except AttributeError:
-            self.log.info("No additional plugins loaded")
+        except Exception as exception:
+            message = f"Loading additional plugins failed {exception}"
+            self.log.info(message)
 
     def init_storage(self):
         """Initialise the storage back-end."""
