@@ -1,6 +1,6 @@
 # xbotlib x.x.x (UNRELEASED)
 
-# xbotlib x.x.x (UNRELEASED)
+# xbotlib 0.15.2 (2021-01-24)
 
 - Add `setup` function hook ([#36](https://git.autonomic.zone/decentral1se/xbotlib/issues/36))
 - Add support for defining additional routes ([#31](https://git.autonomic.zone/decentral1se/xbotlib/issues/31))
