@@ -25,6 +25,7 @@ you want to chat or just invite your bots for testing.
   - [Bot.direct(message)](#bot-direct-message)
   - [Bot.group(message)](#bot-group-message)
   - [Bot.serve(request)](#bot-serve-request)
+  - [Bot.routes()](#bot-routes)
   - [Bot.setup()](#bot-setup)
   - [SimpleMessage](#simplemessage)
   - [Bot](#bot)
@@ -114,6 +115,21 @@ See [this section](#serving-http) for more.
 Arguments:
 
 - **request**: the web request
+
+### Bot.routes()
+
+Register additional routes for web serving.
+
+See [this section](#serving-http) for more.
+
+This is an advanced feature. Use `self.web.add_routes`.
+
+```python
+from aiohttp.web import get
+
+def routes(self):
+    self.web.add_routes([get("/foo", self.foo)])
+```
 
 ### Bot.setup()
 

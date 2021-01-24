@@ -702,6 +702,12 @@ class Bot(ClientXMPP):
         except Exception:
             self.web.add_routes([get("/", self.default_serve)])
 
+        try:
+            self.routes()
+            self.log.info("Registered additional web routes")
+        except Exception:
+            pass
+
         self.log.info(f"Serving on http://0.0.0.0:{self.port}")
         run_app(self.web, port=self.port, print=None)
 
