@@ -15,20 +15,8 @@ extended. The `xbotlib` source code and ideas are largely borrowed from the
 XMPP bot experiments going on in
 [Varia](https://git.vvvvvvaria.org/explore/repos?tab=&sort=recentupdate&q=bots).
 
-We're lurking in
-[xbotlibtest@muc.vvvvvvaria.org](xmpp:xbotlibtest@muc.vvvvvvaria.org?join) if
-you want to chat or just invite your bots for testing.
-
 - [Install](#install)
-- [Example](#example)
-- [API Reference](#api-reference)
-  - [Bot.direct(message)](#bot-direct-message)
-  - [Bot.group(message)](#bot-group-message)
-  - [Bot.serve(request)](#bot-serve-request)
-  - [Bot.routes()](#bot-routes)
-  - [Bot.setup()](#bot-setup)
-  - [SimpleMessage](#simplemessage)
-  - [Bot](#bot)
+- [Getting Started](#getting-started)
 - [Working with your bot](#working-with-your-bot)
   - [Documentation](#documentation)
   - [Commands](#commands)
@@ -38,10 +26,18 @@ you want to chat or just invite your bots for testing.
     - [Using the command-line interface](#using-the-command-line-interface)
     - [Using the environment](#using-the-environment)
   - [Storage back-end](#storage-back-end)
-    - [File system](#file-system)
-    - [Redis key/value storage](#redis-key-value-storage)
   - [Loading Plugins](#loading-plugins)
   - [Serving HTTP](#serving-http)
+  - [API Reference](#api-reference)
+    - [Bot.direct(message)](#botdirect-message-)
+    - [Bot.group(message)](#botgroup-message-)
+    - [Bot.serve(request)](#botserve-request-)
+  - [Bot.routes()](#botroutes--)
+    - [Bot.setup()](#botsetup--)
+    - [SimpleMessage](#simplemessage)
+    - [Bot](#bot)
+- [Chatroom](#chatroom)
+- [More Examples](#more-examples)
 - [Deploy your bots](#deploy-your-bots)
 - [Roadmap](#roadmap)
 - [Changes](#changes)
@@ -53,17 +49,17 @@ you want to chat or just invite your bots for testing.
 $ pip install xbotlib
 ```
 
-## Example
+## Getting Started
 
 Put the following in a `echo.py` file. This bot echoes back whatever message
 you send it in both direct messages and group messages. In group chats, you
-need to message the bot directly (e.g. `echobot: hi`).
+need to message the bot directly (e.g. `echobot: hi`) (see [the commands
+section](#commands) for more).
 
 ```python
 from xbotlib import Bot
 
 class EchoBot(Bot):
-
     def direct(self, message):
         self.reply(message.text, to=message.sender)
 
@@ -78,104 +74,13 @@ the account details that your bot will be using. This will generate an
 `echobot.conf` file in the same working directory for further use. See the
 [configuration](#configure-your-bot) section for more.
 
-Read more in the [API reference](#api-reference) for how to write your own bots.
-
-See more examples on [git.vvvvvvaria.org](https://git.vvvvvvaria.org/explore/repos?q=xbotlib&topic=1).
-
-## API Reference
-
-When writing your own bot, you always sub-class the `Bot` class provided from
-`xbotlib`. Then if you want to respond to a direct message, you write a
-[direct](#botdirectmessage) function. If you want to respond to a group chat
-message, you write a [group](#botgroupmessage) function. That's it for the
-basics.
-
-### Bot.direct(message)
-
-Respond to direct messages.
-
-Arguments:
-
-- **message**: received message (see [SimpleMessage](#simplemessage) below for available attributes)
-
-### Bot.group(message)
-
-Respond to a message in a group chat.
-
-Arguments:
-
-- **message**: received message (see [SimpleMessage](#simplemessage) below for available attributes)
-
-### Bot.serve(request)
-
-Serve requests via the built-in web server.
-
-See [this section](#serving-http) for more.
-
-Arguments:
-
-- **request**: the web request
-
-### Bot.routes()
-
-Register additional routes for web serving.
-
-See [this section](#serving-http) for more.
-
-This is an advanced feature. Use `self.web.add_routes`.
-
-```python
-from aiohttp.web import get
-
-def routes(self):
-    self.web.add_routes([get("/foo", self.foo)])
-```
-
-### Bot.setup()
-
-Run some setup logic before starting your bot.
-
-### SimpleMessage
-
-A simple message interface.
-
-Attributes:
-
-- **text**: the entire text of the message
-- **content**: the text of the message after the nick
-- **sender**: the user the message came from
-- **room**: the room the message came from
-- **receiver**: the receiver of the message
-- **nick**: the nickname of the sender
-- **type**: the type of message
-- **url**: The URL of a sent file
-
-### Bot
-
-> Bot.reply(message, to=None, room=None)
-
-Send a reply back.
-
-Arguments:
-
-- **message**: the message that is sent
-- **to**: the user to send the reply to
-- **room**: the room to send the reply to
-
-> Bot.respond(response, content_type="text/html")
-
-Return a response via the web server.
-
-Arguments:
-
-- **response**: the text of the response
-- **content_type**: the type of response
-
-Other useful attributes on the `Bot` class are:
-
-- **self.db**: The [Redis database](#redis-key-value-storage) if you're using it
+That's it! If you want to go further, continue reading [here](#working-with-your-bot).
 
 ## Working with your bot
+
+The following sections try to cover all the ways you can configure and extend
+your bot using `xbotlib`. If anything is unclear, please let us know [on the
+chat](#chatroom).
 
 ### Documentation
 
@@ -183,10 +88,19 @@ Add a `help = "my help"` to your `Bot` class like so.
 
 ```python
 class MyBot(Bot):
-    help = "My help"
+    help = """This is my cool help.
+
+    I can list some commands too:
+
+      @foo - some command
+    """
 ```
 
-See more in the [commands](#commands) section on how to use this.
+Your bot will then respond to `mybot: @help` invocations. This string can be a
+multi-line string with indentation. `xbotlib` will try to format this sensibly
+for showing in chat clients.
+
+See more in the [commands](#commands) section for more.
 
 ### Commands
 
@@ -213,7 +127,7 @@ your bot implementation. You can also specify another path using the `--avatar`
 option on the command-line interface. The images should ideally have a height
 of `64` and a width of `64` pixels each.
 
-## Configuration
+### Configuration
 
 All the ways you can pass configuration details to your bot. There are three
 ways to configure your bot, the configuration file, command-line interface and
@@ -363,21 +277,131 @@ Here's a small example that renders a random ASCII letter and uses a stylesheet.
 ```python
 from string import ascii_letters
 
-def serve(self, request):
+async def serve(self, request):
     letter = choice(ascii_letters)
     rendered = self.template.render(letter=letter)
     return self.respond(rendered)
 ```
 
 Please note the use of the `return` keyword here. The `serve` function must
-return a response that will be passed to the web server. This function can
-return any content type that you might find on the web (e.g. HTML, XML, JSON)
-but you must specify the `content_type=...` keyword argument for `respond`.
+return a response that will be passed to the web server. Also, the `async`
+keyword. This function can handle asynchronous operations and must be marked as
+such. You can return any content type that you might find on the web (e.g.
+HTML, XML, JSON, audio and maybe even video) but you must specify the
+`content_type=...` keyword argument for `respond`.
+
+See the [list of available content
+types](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types#types)
+for more.
 
 If you want to pass data from your `direct`/`group` functions to the `serve`
 function, you'll need to make use of [some type of persistent
 storage](#storage-back-end). Your `serve` function can read from the storage
-back-end and then respond.
+back-end and then respond. This is usually as simple as accessing the `self.db`
+attribute.
+
+### API Reference
+
+When writing your own bot, you always sub-class the `Bot` class provided from
+`xbotlib`. Then if you want to respond to a direct message, you write a
+[direct](#botdirectmessage) function. If you want to respond to a group chat
+message, you write a [group](#botgroupmessage) function. That's it for the
+basics.
+
+#### Bot.direct(message)
+
+Respond to direct messages.
+
+Arguments:
+
+- **message**: received message (see [SimpleMessage](#simplemessage) below for available attributes)
+
+#### Bot.group(message)
+
+Respond to a message in a group chat.
+
+Arguments:
+
+- **message**: received message (see [SimpleMessage](#simplemessage) below for available attributes)
+
+#### Bot.serve(request)
+
+Serve requests via the built-in web server.
+
+See [this section](#serving-http) for more.
+
+Arguments:
+
+- **request**: the web request
+
+### Bot.routes()
+
+Register additional routes for web serving.
+
+See [this section](#serving-http) for more.
+
+This is an advanced feature. Use `self.web.add_routes`.
+
+```python
+from aiohttp.web import get
+
+def routes(self):
+    self.web.add_routes([get("/foo", self.foo)])
+```
+
+#### Bot.setup()
+
+Run some setup logic before starting your bot.
+
+#### SimpleMessage
+
+A simple message interface.
+
+Attributes:
+
+- **text**: the entire text of the message
+- **content**: the text of the message after the nick
+- **sender**: the user the message came from
+- **room**: the room the message came from
+- **receiver**: the receiver of the message
+- **nick**: the nickname of the sender
+- **type**: the type of message
+- **url**: The URL of a sent file
+
+#### Bot
+
+> Bot.reply(message, to=None, room=None)
+
+Send a reply back.
+
+Arguments:
+
+- **message**: the message that is sent
+- **to**: the user to send the reply to
+- **room**: the room to send the reply to
+
+> Bot.respond(response, content_type="text/html")
+
+Return a response via the web server.
+
+Arguments:
+
+- **response**: the text of the response
+- **content_type**: the type of response
+
+Other useful attributes on the `Bot` class are:
+
+- **self.db**: The [Redis database](#redis-key-value-storage) if you're using it
+
+## Chatroom
+
+We're lurking in
+[xbotlibtest@muc.vvvvvvaria.org](xmpp:xbotlibtest@muc.vvvvvvaria.org?join) if
+you want to chat or just invite your bots for testing.
+
+## More Examples
+
+See more examples on [git.vvvvvvaria.org](https://git.vvvvvvaria.org/explore/repos?q=xbotlib&topic=1).
 
 ## Deploy your bots
 
