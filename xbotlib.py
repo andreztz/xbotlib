@@ -18,6 +18,59 @@ from humanize import naturaldelta
 from slixmpp import ClientXMPP
 
 
+class SimpleDatabase(dict):
+    """A simple database.
+
+    It is a dictionary which saves to disk on all writes. It is optimised for
+    ease of hacking and accessibility and not for performance or efficiency.
+    """
+
+    def __init__(self, filename, *args, **kwargs):
+        """Initialise the object."""
+        self.filename = Path(filename).absolute()
+        self._loads()
+        self.update(*args, **kwargs)
+
+    def _loads(self):
+        """Load the database."""
+        if not exists(self.filename):
+            return
+
+        try:
+            with open(self.filename, "r") as handle:
+                self.update(loads(handle.read()))
+        except Exception as exception:
+            message = f"Loading file storage failed: {exception}"
+            self.log.debug(message)
+            exit(1)
+
+    def _dumps(self):
+        """Save the databse to disk."""
+        try:
+            with open(self.filename, "w") as handle:
+                handle.write(dumps(self))
+        except Exception as exception:
+            message = f"Saving file storage failed: {exception}"
+            self.log.debug(message)
+            exit(1)
+
+    def __setitem__(self, key, val):
+        """Write data to the database."""
+        dict.__setitem__(self, key, val)
+        self._dumps()
+
+    def __delitem__(self, key):
+        """Remove data from the database."""
+        dict.__delitem__(key)
+        self._dumps()
+
+    def update(self, *args, **kwargs):
+        """Update the database."""
+        for k, v in dict(*args, **kwargs).items():
+            self[k] = v
+        self._dumps()
+
+
 class SimpleMessage:
     """A simple message interface."""
 
@@ -478,10 +531,17 @@ class Bot(ClientXMPP):
             if self.command(message, to=message.sender):
                 return
 
+        if not hasattr(self, "direct"):
+            self.log.info(f"Bot.direct not implemented for {self.nick}")
+            return
+
         try:
             self.direct(message)
-        except AttributeError:
-            self.log.info(f"Bot.direct not implemented for {self.nick}")
+        except Exception as exception:
+            self.log.info(f"Bot.direct threw exception {exception}")
+
+        if self.storage == "file":
+            self.db._dumps()
 
     def session_start(self, message):
         """Handle session_start event."""
@@ -548,10 +608,17 @@ class Bot(ClientXMPP):
             if self.command(message, room=message.room):
                 return
 
+        if not hasattr(self, "group"):
+            self.log.info(f"Bot.group not implemented for {self.nick}")
+            return
+
         try:
             self.group(message)
-        except AttributeError:
-            self.log.info(f"Bot.group not implemented for {self.nick}")
+        except Exception as exception:
+            self.log.info(f"Bot.group threw exception: {exception}")
+
+        if self.storage == "file":
+            self.db._dumps()
 
     def register_xmpp_plugins(self):
         """Register XMPP plugins that the bot supports."""
@@ -572,9 +639,7 @@ class Bot(ClientXMPP):
         """Initialise the storage back-end."""
         if self.storage == "file":
             try:
-                self.db = {}
-                if exists(self.storage_file):
-                    self.db = loads(open(self.storage_file, "r").read())
+                self.db = SimpleDatabase(self.storage_file)
                 self.log.info("Successfully loaded file storage")
             except Exception as exception:
                 message = f"Failed to load {self.storage_file}: {exception}"
@@ -605,17 +670,7 @@ class Bot(ClientXMPP):
                 self.serve_web()
             self.process(forever=False)
         except (KeyboardInterrupt, RuntimeError):
-            if self.storage != "file":
-                exit(0)
-
-            try:
-                with open(self.storage_file, "w") as handle:
-                    handle.write(dumps(self.db))
-                self.log.info("Successfully saved file storage")
-            except Exception as exception:
-                message = f"Failed to save file storage: {exception}"
-                self.log.info(message)
-                exit(1)
+            pass
 
     def serve_web(self):
         """Serve the web."""

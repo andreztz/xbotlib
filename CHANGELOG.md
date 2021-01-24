@@ -1,5 +1,9 @@
 # xbotlib x.x.x (UNRELEASED)
 
+# xbotlib 0.15.1 (2021-01-24)
+
+- Save to file based storage on all writes ([#39](https://git.autonomic.zone/decentral1se/xbotlib/issues/39))
+
 # xbotlib 0.15.0 (2021-01-23)
 
 - Fix configuration generation to cover mandatory options ([#1](https://git.vvvvvvaria.org/decentral1se/xbotlib/issues/1))
