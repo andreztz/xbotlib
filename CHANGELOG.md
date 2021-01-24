@@ -3,6 +3,7 @@
 # xbotlib 0.15.1 (2021-01-24)
 
 - Save to file based storage on all writes ([#39](https://git.autonomic.zone/decentral1se/xbotlib/issues/39))
+- Improve logging feedback for plugin load fails
 
 # xbotlib 0.15.0 (2021-01-23)
 
