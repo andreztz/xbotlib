@@ -32,7 +32,7 @@ XMPP bot experiments going on in
     - [Bot.direct(message)](#botdirect-message-)
     - [Bot.group(message)](#botgroup-message-)
     - [Bot.serve(request)](#botserve-request-)
-  - [Bot.routes()](#botroutes--)
+    - [Bot.routes()](#botroutes--)
     - [Bot.setup()](#botsetup--)
     - [SimpleMessage](#simplemessage)
     - [Bot](#bot)
@@ -334,7 +334,7 @@ Arguments:
 
 - **request**: the web request
 
-### Bot.routes()
+#### Bot.routes()
 
 Register additional routes for web serving.
 
