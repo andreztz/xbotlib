@@ -11,9 +11,8 @@ A friendly lightweight wrapper around
 [slixmpp](https://slixmpp.readthedocs.io/) for writing XMPP bots in Python. The
 goal is to make writing and running XMPP bots easy and fun. `xbotlib` is a
 [single file implementation](./xbotlib.py) which can easily be understood and
-extended. The `xbotlib` source code and ideas are largely
-borrowed/stolen/adapted/reimagined from the XMPP bot experiments that have gone
-on and are still going on in
+extended. The `xbotlib` source code and ideas are largely borrowed from the
+XMPP bot experiments going on in
 [Varia](https://git.vvvvvvaria.org/explore/repos?tab=&sort=recentupdate&q=bots).
 
 We're lurking in
@@ -54,8 +53,9 @@ $ pip install xbotlib
 
 ## Example
 
-Put the following in a `echo.py` file. This bot is pretty simple: it echoes
-back whatever message you send it. It is an easy way to get started.
+Put the following in a `echo.py` file. This bot echoes back whatever message
+you send it in both direct messages and group messages. In group chats, you
+need to message the bot directly (e.g. `echobot: hi`).
 
 ```python
 from xbotlib import Bot
@@ -67,6 +67,8 @@ class EchoBot(Bot):
 
     def group(self, message):
         self.reply(message.content, room=message.room)
+
+EchoBot()
 ```
 
 And then `python echo.py`. You will be asked a few questions in order to load
@@ -260,7 +262,7 @@ deployments.
 In order to store data you can make use of the `self.db` attribute of the `Bot`
 class. It is a Python dictionary which will be saved to disk automatically for
 you as a `<nick>.json` in your current working directory. The name and path to
-this file can be configured.
+this file can be configured using the storage file option.
 
 ```python
 def group(self, message):
@@ -272,7 +274,7 @@ If you want to inspect the database when the bot is not running, you can look
 in the file directly.
 
 ```bash
-$ cat mybot.json
+$ cat <nick>.json
 ```
 
 For more advanced use cases, `xbotlib` also supports [Redis](https://redis.io/)
@@ -344,7 +346,7 @@ but you must specify the `content_type=...` keyword argument for `respond`.
 
 If you want to pass data from your `direct`/`group` functions to the `serve`
 function, you'll need to make use of [some type of persistent
-storage](#persistent-storage). Your `serve` function can read from the storage
+storage](#storage-back-end). Your `serve` function can read from the storage
 back-end and then respond.
 
 ## Deploy your bots
