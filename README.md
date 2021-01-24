@@ -146,7 +146,7 @@ simplest way to run your bot locally.
 - **nick**: the nickname of the bot
 - **avatar**: the avatar of the bot (default: `avatar.png`)
 - **redis_url**: the Redis connection URL
-- **rooms**: a list of rooms to automatically join
+- **rooms**: a list of rooms to automatically join (comma separated)
 - **no_auto_join**: disable auto-join when invited (default: `False`)
 - **template**: the port to serve from (default: `index.html.j2`)
 - **serve**: turn on the web server (default: `False`)
