@@ -47,7 +47,7 @@ skip = ".tox"
 legacy_tox_ini = """
 [tox]
 envlist =
-    {py36,py37,py38}
+    {py36,py37,py38,py39}
     lint
     sort
     format
@@ -60,25 +60,25 @@ deps =
   pytest
   pytest-cov
   pytest-mock
-commands = pytest test.py --cov={toxinidir}/xbotlib.py --no-cov-on-fail {posargs}
+commands = pytest test_xbotlib.py --cov=xbotlib --no-cov-on-fail {posargs}
 
 [testenv:lint]
 skipdist = True
 deps = flake8
-commands = flake8 {posargs:--max-line-length 80} xbotlib.py
+commands = flake8 {posargs:--max-line-length 80} xbotlib.py test_xbotlib.py
 
 [testenv:sort]
 skipdist = True
 deps = isort
-commands = isort {posargs:-c} xbotlib.py
+commands = isort {posargs:-c} xbotlib.py test_xbotlib.py
 
 [testenv:format]
 skipdist = True
 deps = black
-commands = black {posargs:--check} xbotlib.py
+commands = black {posargs:--check} xbotlib.py test_xbotlib.py
 
 [testenv:type]
 skipdist = True
 deps = mypy
-commands = mypy {posargs:--ignore-missing-imports} xbotlib.py
+commands = mypy {posargs:--ignore-missing-imports} xbotlib.py test_xbotlib.py
 """
