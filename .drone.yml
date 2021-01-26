@@ -31,3 +31,12 @@ pipeline:
     commands:
       - pip install tox
       - tox -e ${TOXENV}
+
+kind: pipeline
+name: code coverage
+steps:
+  - name: coverage
+    image: plugins/codecov
+    settings:
+      token:
+        from_secret: codecov_token
