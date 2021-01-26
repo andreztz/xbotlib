@@ -42,6 +42,7 @@ XMPP bot experiments going on in
 - [Roadmap](#roadmap)
 - [Changes](#changes)
 - [License](#license)
+- [Contributing](#contributing)
 
 ## Install
 
@@ -418,3 +419,10 @@ See the [CHANGELOG.md](./CHANGELOG.md).
 ## License
 
 See the [LICENSE](./LICENSE.md).
+
+## Contributing
+
+Any and all contributions most welcome! Happy to hear how you use the library
+or what could be improved from a usability perspective. To test, install
+[Tox](https://tox.readthedocs.io/en/latest/) (`pip install tox`) and run `tox`
+to run the test suite locally.
