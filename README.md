@@ -423,6 +423,7 @@ See the [LICENSE](./LICENSE.md).
 ## Contributing
 
 Any and all contributions most welcome! Happy to hear how you use the library
-or what could be improved from a usability perspective. To test, install
-[Tox](https://tox.readthedocs.io/en/latest/) (`pip install tox`) and run `tox`
-to run the test suite locally.
+or what could be improved from a usability perspective.
+
+To test, install [Tox](https://tox.readthedocs.io/en/latest/) (`pip install
+tox`) and run `tox` to run the test suite locally.
