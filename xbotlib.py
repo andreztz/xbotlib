@@ -41,7 +41,7 @@ class SimpleDatabase(dict):
                 self.update(loads(handle.read()))
         except Exception as exception:
             message = f"Loading file storage failed: {exception}"
-            self.log.debug(message)
+            self.log.error(message)
             exit(1)
 
     def _dumps(self):
@@ -51,7 +51,7 @@ class SimpleDatabase(dict):
                 handle.write(dumps(self))
         except Exception as exception:
             message = f"Saving file storage failed: {exception}"
-            self.log.debug(message)
+            self.log.error(message)
             exit(1)
 
     def __setitem__(self, key, val):
@@ -501,8 +501,10 @@ class Bot(ClientXMPP):
         try:
             from jinja2 import Environment, FileSystemLoader
         except ModuleNotFoundError:
-            print("Missing required dependency: jinja2")
-            print("Have you tried `pip install xbotlib[web]`")
+            self.log.error(
+                "Missing required dependency jinja2, ",
+                "have you tried `pip install xbotlib[web]`",
+            )
             exit(1)
 
         try:
@@ -510,7 +512,8 @@ class Bot(ClientXMPP):
             env = Environment(loader=loader)
             return env.get_template(template)
         except Exception:
-            self.log.info(f"Unable to load {template}")
+            self.log.error(f"Unable to load {template}")
+            exit(1)
 
     def register_xmpp_event_handlers(self):
         """Register functions against specific XMPP event handlers."""
@@ -542,7 +545,7 @@ class Bot(ClientXMPP):
         try:
             self.direct(message)
         except Exception as exception:
-            self.log.info(f"Bot.direct threw exception {exception}")
+            self.log.error(f"Bot.direct threw exception {exception}")
 
         if self.storage == "file":
             self.db._dumps()
@@ -556,12 +559,17 @@ class Bot(ClientXMPP):
 
     def publish_avatar(self):
         """Publish bot avatar."""
+        abspath = Path(self.avatar).absolute()
+
+        if not exists(abspath):
+            self.log.info(f"No avatar discovered (tried '{abspath})'")
+            return
+
         try:
-            abspath = Path(self.avatar).absolute()
             with open(abspath, "rb") as handle:
                 contents = handle.read()
-        except IOError:
-            self.log.info(f"No avatar discovered (tried '{abspath}')")
+        except Exception as exception:
+            self.log.error(f"Failed to load avatar: {exception}")
             return
 
         id = self.plugin["xep_0084"].generate_id(contents)
@@ -619,7 +627,7 @@ class Bot(ClientXMPP):
         try:
             self.group(message)
         except Exception as exception:
-            self.log.info(f"Bot.group threw exception: {exception}")
+            self.log.error(f"Bot.group threw exception: {exception}")
 
         if self.storage == "file":
             self.db._dumps()
@@ -641,8 +649,8 @@ class Bot(ClientXMPP):
                 self.register_plugin(plugin)
                 self.log.info(f"Loaded {plugin}")
         except Exception as exception:
-            message = f"Loading additional plugins failed {exception}"
-            self.log.info(message)
+            message = f"Loading additional plugins failed: {exception}"
+            self.log.error(message)
 
     def init_storage(self):
         """Initialise the storage back-end."""
@@ -652,7 +660,7 @@ class Bot(ClientXMPP):
                 self.log.info("Successfully loaded file storage")
             except Exception as exception:
                 message = f"Failed to load {self.storage_file}: {exception}"
-                self.log.info(message)
+                self.log.error(message)
                 exit(1)
         else:
             try:
@@ -662,11 +670,13 @@ class Bot(ClientXMPP):
                 return self.log.info("Successfully connected to Redis storage")
             except ValueError as exception:
                 message = f"Failed to connect to Redis storage: {exception}"
-                self.log.info(message)
+                self.log.error(message)
                 exit(1)
             except ModuleNotFoundError:
-                print("missing required dependency using Redis")
-                print("Have you tried `pip install xbotlib[redis]`")
+                self.log.error(
+                    "Missing required dependency using Redis, ",
+                    "have you tried `pip install xbotlib[redis]`",
+                )
                 exit(1)
 
     def run(self):
@@ -684,7 +694,7 @@ class Bot(ClientXMPP):
                     self.log.info("Finished running setup")
                 except Exception as exception:
                     message = f"Bot.setup failed: {exception}"
-                    self.log.info(message)
+                    self.log.error(message)
 
             self.process(forever=False)
         except (KeyboardInterrupt, RuntimeError):
@@ -695,8 +705,10 @@ class Bot(ClientXMPP):
         try:
             from aiohttp.web import Application, get, run_app
         except ModuleNotFoundError:
-            print("Missing required dependency: aiohttp")
-            print("Have you tried `pip install xbotlib[web]`")
+            self.log.error(
+                "Missing required dependency aiohttp, ",
+                "have you tried `pip install xbotlib[web]`",
+            )
             exit(1)
 
         self.web = Application()
@@ -720,8 +732,10 @@ class Bot(ClientXMPP):
         try:
             from aiohttp.web import Response
         except ModuleNotFoundError:
-            print("Missing required dependency: aiohttp")
-            print("Have you tried `pip install xbotlib[web]`")
+            self.log.error(
+                "Missing required dependency aiohttp, ",
+                "have you tried `pip install xbotlib[web]`",
+            )
             exit(1)
 
         return Response(text=f"{self.nick} is alive and well")
@@ -772,8 +786,10 @@ class Bot(ClientXMPP):
         try:
             from aiohttp.web import Response
         except ModuleNotFoundError:
-            print("Missing required dependency: aiohttp")
-            print("Have you tried `pip install xbotlib[web]`")
+            self.log.error(
+                "Missing required dependency aiohttp, ",
+                "have you tried `pip install xbotlib[web]`",
+            )
             exit(1)
 
         return Response(text=response, content_type=content_type)
