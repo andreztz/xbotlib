@@ -13,6 +13,7 @@ from os import environ
 from os.path import exists
 from pathlib import Path
 from sys import exit, stdout
+from traceback import print_exc
 
 from humanize import naturaldelta
 from slixmpp import ClientXMPP
@@ -545,7 +546,8 @@ class Bot(ClientXMPP):
         try:
             self.direct(message)
         except Exception as exception:
-            self.log.error(f"Bot.direct threw exception {exception}")
+            self.log.error(f"Bot.direct threw exception: {exception}")
+            print_exc(file=stdout)
 
         if self.storage == "file":
             self.db._dumps()
@@ -628,6 +630,7 @@ class Bot(ClientXMPP):
             self.group(message)
         except Exception as exception:
             self.log.error(f"Bot.group threw exception: {exception}")
+            print_exc(file=stdout)
 
         if self.storage == "file":
             self.db._dumps()
