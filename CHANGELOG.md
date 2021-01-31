@@ -1,5 +1,9 @@
 # xbotlib x.x.x (UNRELEASED)
 
+# xbotlib 0.16.0 (2021-01-??)
+
+- Fix logging of exceptions and increase info for stack traces ([#2](https://github.com/decentral1se/xbotlib/issues/2))
+
 # xbotlib 0.15.2 (2021-01-24)
 
 - Add `setup` function hook ([#36](https://git.autonomic.zone/decentral1se/xbotlib/issues/36))
