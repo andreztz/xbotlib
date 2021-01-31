@@ -49,7 +49,7 @@ class SimpleDatabase(dict):
         """Save the databse to disk."""
         try:
             with open(self.filename, "w") as handle:
-                handle.write(dumps(self))
+                handle.write(dumps(self, indent=2, sort_keys=True))
         except Exception as exception:
             message = f"Saving file storage failed: {exception}"
             self.log.error(message)
