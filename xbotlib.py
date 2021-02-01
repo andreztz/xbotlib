@@ -381,15 +381,15 @@ class Bot(ClientXMPP):
         )
         rooms = input("Rooms: ")
 
-        if rooms:
-            rooms = [r.strip() for r in rooms.split(",")]
-
         inputs = {
             "account": account,
             "password": password,
             "nick": nick,
-            "rooms": rooms,
         }
+
+        if rooms:
+            inputs["rooms"] = rooms
+
         self.log.debug(f"Received {inputs} as input")
 
         config = ConfigParser()

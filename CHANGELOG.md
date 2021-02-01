@@ -4,6 +4,7 @@
 
 - Fix logging of exceptions and increase info for stack traces ([#2](https://github.com/decentral1se/xbotlib/issues/2))
 - Format JSON to human readable when saving ([#8](https://git.vvvvvvaria.org/decentral1se/xbotlib/issues/8))
+- Fix room formatting when storing in configuration files ([#10](https://git.vvvvvvaria.org/decentral1se/xbotlib/issues/10))
 
 # xbotlib 0.15.2 (2021-01-24)
 
