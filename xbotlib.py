@@ -9,7 +9,7 @@ from imghdr import what
 from inspect import cleandoc
 from json import dumps, loads
 from logging import DEBUG, INFO, basicConfig, getLogger
-from os import environ
+from os import environ, mkdir
 from os.path import exists
 from pathlib import Path
 from sys import exit, stdout
@@ -237,6 +237,7 @@ class Bot(ClientXMPP):
         self.register_xmpp_event_handlers()
         self.register_xmpp_plugins()
         self.init_storage()
+        self.init_data()
         self.run()
 
     def parse_arguments(self):
@@ -683,6 +684,27 @@ class Bot(ClientXMPP):
                     "have you tried `pip install xbotlib[redis]`",
                 )
                 exit(1)
+
+    def init_data(self):
+        """Initialise internal data storage."""
+        try:
+            internal_dir = Path(".xbotlib").absolute()
+            if not exists(internal_dir):
+                mkdir(internal_dir)
+                self.log.info("Successfully initialised internal directory")
+        except Exception as exception:
+            message = f"Failed to create {internal_dir}: {exception}"
+            self.log.error(message)
+            exit(1)
+
+        try:
+            internal_storage_path = f"{internal_dir}/data.json"
+            self._data = SimpleDatabase(internal_storage_path)
+            self.log.info("Successfully loaded internal storage")
+        except Exception as exception:
+            message = f"Failed to load {internal_storage_path}: {exception}"
+            self.log.error(message)
+            exit(1)
 
     def run(self):
         """Run the bot."""
