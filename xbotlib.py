@@ -213,9 +213,9 @@ class Config:
         return self.section.get("storage", None)
 
     @property
-    def storage_file(self):
-        """Path to the file based storage back-end."""
-        return self.section.get("storage_file", None)
+    def output(self):
+        """Path to the output directory."""
+        return self.section.get("output", None)
 
 
 class Bot(ClientXMPP):
@@ -322,10 +322,10 @@ class Bot(ClientXMPP):
             choices=("file", "redis"),
         )
         self.parser.add_argument(
-            "-stf",
-            "--storage-file",
-            dest="storage_file",
-            help="path to file based storage back-end",
+            "-o",
+            "--output",
+            dest="output",
+            help="path to output directory",
         )
 
         self.args = self.parser.parse_args()
@@ -458,11 +458,11 @@ class Bot(ClientXMPP):
             or environ.get("XBOT_STORAGE", None)
             or "file"
         )
-        storage_file = (
-            self.args.storage_file
-            or self.config.storage_file
-            or environ.get("XBOT_STORAGE_FILE", None)
-            or f"{nick}.json"
+        output = (
+            self.args.output
+            or self.config.output
+            or environ.get("XBOT_OUTPUT", None)
+            or "."
         )
 
         if not account:
@@ -492,7 +492,7 @@ class Bot(ClientXMPP):
             self.template = self.load_template(template)
 
         self.storage = storage
-        self.storage_file = Path(storage_file).absolute()
+        self.output = Path(output).absolute()
 
     def load_template(self, template):
         """Load template via Jinja."""
@@ -657,12 +657,14 @@ class Bot(ClientXMPP):
 
     def init_storage(self):
         """Initialise the storage back-end."""
+        file_storage_path = f"{self.output}/{self.nick}.json"
+
         if self.storage == "file":
             try:
-                self.db = SimpleDatabase(self.storage_file)
+                self.db = SimpleDatabase(file_storage_path)
                 self.log.info("Successfully loaded file storage")
             except Exception as exception:
-                message = f"Failed to load {self.storage_file}: {exception}"
+                message = f"Failed to load {file_storage_path}: {exception}"
                 self.log.error(message)
                 exit(1)
         else:

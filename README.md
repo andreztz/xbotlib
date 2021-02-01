@@ -153,7 +153,7 @@ simplest way to run your bot locally.
 - **serve**: turn on the web server (default: `False`)
 - **port**: the port to serve from (default: `8080`)
 - **storage**: storage back-end (default: `file`)
-- **storage_file**: path to file based storage back-end (default: `<nick>.json>`)
+- **output**: path to the output directory (default: `./`)
 
 #### Using the command-line interface
 
@@ -173,7 +173,7 @@ can use the `--help` option to see what is available (e.g. `python bot.py --help
 - **-t TEMPLATE, --template TEMPLATE**: the template to render (default: `index.html.j2`)
 - **-s, --serve**: turn on the web server (default: `False`)
 - **-st {file,redis}, --storage {file,redis}**: choice of storage back-end (default: `file`)
-- **-stf STORAGE_FILE, --storage-file STORAGE_FILE**: path to file based storage back-end (default: `<nick>.json`)
+- **-o OUTPUT, --output OUTPUT**: path to the output directory (default: `./`)
 
 #### Using the environment
 
@@ -193,14 +193,15 @@ deployments.
 - **XBOT_SERVE**: Turn on the web server (default: `False`)
 - **XBOT_PORT**: The port to serve from (default: `8080`)
 - **XBOT_STORAGE**: choice of storage back-end (default: `file`)
-- **XBOT_STORAGE_FILE**: path to file based storage back-end (default: `<nick>.json`)
+- **XBOT_OUTPUT**: path to the output directory (default: `./`)
 
 ### Storage back-end
 
 In order to store data you can make use of the `self.db` attribute of the `Bot`
 class. It is a Python dictionary which will be saved to disk automatically for
 you as a `<nick>.json` in your current working directory. The name and path to
-this file can be configured using the storage file option.
+this file can be configured using the output option (e.g. `python bot.py
+--output /var/www/html`)
 
 ```python
 def group(self, message):
@@ -425,5 +426,4 @@ See the [LICENSE](./LICENSE.md).
 Any and all contributions most welcome! Happy to hear how you use the library
 or what could be improved from a usability perspective.
 
-To test, install [Tox](https://tox.readthedocs.io/en/latest/) (`pip install
-tox`) and run `tox` to run the test suite locally.
+To test, install [Tox](https://tox.readthedocs.io/en/latest/) (`pip install tox`) and run `tox` to run the test suite locally.

@@ -1,5 +1,7 @@
 """Unit tests for xbotlib module."""
 
+from pathlib import Path
+
 from pytest import fixture
 
 from xbotlib import Config, SimpleMessage
@@ -53,7 +55,7 @@ def config():
                 "template": "index.html.j2",
                 "serve": True,
                 "storage": "file",
-                "storage_file": "foo.json",
+                "output": ".",
             }
         },
     )
@@ -91,4 +93,4 @@ def test_config(config):
     assert config.template == "index.html.j2"
     assert config.serve
     assert config.storage == "file"
-    assert config.storage_file == "foo.json"
+    assert config.output == "."
