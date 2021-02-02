@@ -1,6 +1,6 @@
 # xbotlib x.x.x (UNRELEASED)
 
-# xbotlib 0.16.0 (2021-01-??)
+# xbotlib 0.16.0 (2021-02-02)
 
 - Fix logging of exceptions and increase info for stack traces ([#2](https://github.com/decentral1se/xbotlib/issues/2))
 - Format JSON to human readable when saving ([#8](https://git.vvvvvvaria.org/decentral1se/xbotlib/issues/8))
