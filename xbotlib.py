@@ -59,12 +59,12 @@ class SimpleDatabase(dict):
 
     def __setitem__(self, key, val):
         """Write data to the database."""
-        dict.__setitem__(self, key, val)
+        super().__setitem__(key, val)
         self._dumps()
 
     def __delitem__(self, key):
         """Remove data from the database."""
-        dict.__delitem__(key)
+        super().__delitem__(key)
         self._dumps()
 
     def update(self, *args, **kwargs):

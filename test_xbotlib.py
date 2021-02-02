@@ -101,3 +101,10 @@ def test_config(config):
     assert config.serve
     assert config.storage == "file"
     assert config.output == "."
+
+
+def test_simple_message_delete(tmp_db_path):
+    db = SimpleDatabase(tmp_db_path, log)
+    db["foo"] = "bar"
+    del db["foo"]
+    assert "foo" not in db
