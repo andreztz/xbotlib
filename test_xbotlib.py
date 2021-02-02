@@ -1,7 +1,6 @@
 """Unit tests for xbotlib module."""
 
 from logging import getLogger
-from pathlib import Path
 
 from pytest import fixture
 
