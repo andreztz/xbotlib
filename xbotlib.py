@@ -26,10 +26,11 @@ class SimpleDatabase(dict):
     ease of hacking and accessibility and not for performance or efficiency.
     """
 
-    def __init__(self, filename, *args, log=None, **kwargs):
+    def __init__(self, filename, log, *args, **kwargs):
         """Initialise the object."""
         self.filename = Path(filename).absolute()
         self.log = log
+
         self._loads()
         self.update(*args, **kwargs)
 
@@ -76,11 +77,11 @@ class SimpleDatabase(dict):
 class SimpleMessage:
     """A simple message interface."""
 
-    def __init__(self, message, bot):
+    def __init__(self, message, nick, log):
         """Initialise the object."""
         self.message = message
-        self.bot = bot
-        self.log = self.bot.log
+        self._nick = nick
+        self.log = log
 
     @property
     def text(self):
@@ -106,7 +107,7 @@ class SimpleMessage:
         body = self.message["body"]
 
         try:
-            match = fr"^{self.bot.nick}.?(\s)"
+            match = fr"^{self._nick}.?(\s)"
             split = re.split(match, body)
             filtered = list(filter(None, split))
             return filtered[-1].strip()
@@ -528,12 +529,12 @@ class Bot(ClientXMPP):
         self.add_event_handler("message_error", self.error_message)
 
     def error_message(self, message):
-        message = SimpleMessage(message, self)
+        message = SimpleMessage(message, self.nick, self.log)
         self.log.error(f"Received error message: {message.text}")
 
     def direct_message(self, message):
         """Handle direct message events."""
-        message = SimpleMessage(message, self)
+        message = SimpleMessage(message, self.nick, self.log)
 
         if message.type not in self.DIRECT_MESSAGE_TYPES:
             return
@@ -616,7 +617,7 @@ class Bot(ClientXMPP):
 
     def group_message(self, message):
         """Handle group chat message events."""
-        message = SimpleMessage(message, self)
+        message = SimpleMessage(message, self.nick, self.log)
 
         if "@" in message.text:
             if self.meta(message, room=message.room):
@@ -672,7 +673,7 @@ class Bot(ClientXMPP):
 
         if self.storage == "file":
             try:
-                self.db = SimpleDatabase(file_storage_path, log=self.log)
+                self.db = SimpleDatabase(file_storage_path, self.log)
                 self.log.info("Successfully loaded file storage")
             except Exception as exception:
                 message = f"Failed to load {file_storage_path}: {exception}"
@@ -709,7 +710,7 @@ class Bot(ClientXMPP):
 
         try:
             internal_storage_path = f"{internal_dir}/data.json"
-            self._data = SimpleDatabase(internal_storage_path, log=self.log)
+            self._data = SimpleDatabase(internal_storage_path, self.log)
             self.log.info("Successfully loaded internal storage")
         except Exception as exception:
             message = f"Failed to load {internal_storage_path}: {exception}"

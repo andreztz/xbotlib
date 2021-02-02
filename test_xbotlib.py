@@ -1,10 +1,13 @@
 """Unit tests for xbotlib module."""
 
+from logging import getLogger
 from pathlib import Path
 
 from pytest import fixture
 
-from xbotlib import Config, SimpleMessage
+from xbotlib import Config, SimpleDatabase, SimpleMessage
+
+log = getLogger(__name__)
 
 
 @fixture
@@ -61,10 +64,14 @@ def config():
     )
 
 
-def test_simple_message(message, bot):
-    sm = SimpleMessage(message, bot)
+@fixture
+def tmp_db_path(tmp_path):
+    return tmp_path / "testbot.json"
+
+
+def test_simple_message(message):
+    sm = SimpleMessage(message, "mockbot", log)
     assert sm.message == message
-    assert sm.bot == bot
     assert sm.text == "mockbot: foobar"
     assert sm.content == "foobar"
     # TODO*decentral1se): how to test test this?
