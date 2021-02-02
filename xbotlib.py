@@ -594,6 +594,10 @@ class Bot(ClientXMPP):
             self.plugin["xep_0045"].join_muc(room, self.config.nick)
             self.log.info(f"Joining {room} automatically")
 
+        for room in self._data["invited"]:
+            self.plugin["xep_0045"].join_muc(room, self.config.nick)
+            self.log.info(f"Re-joining {room} (invited previously)")
+
     def group_invite(self, message):
         """Accept invites to group chats."""
         room = message["from"]
@@ -603,6 +607,10 @@ class Bot(ClientXMPP):
 
         self.plugin["xep_0045"].join_muc(room, self.config.nick)
         self.log.info(f"Joining {room} as invited")
+
+        if room not in self._data["invited"]:
+            self._data["invited"].append(str(room))
+            self._data._dumps()
 
     def group_message(self, message):
         """Handle group chat message events."""
@@ -705,6 +713,9 @@ class Bot(ClientXMPP):
             message = f"Failed to load {internal_storage_path}: {exception}"
             self.log.error(message)
             exit(1)
+
+        if "invited" not in self._data:
+            self._data["invited"] = []
 
     def run(self):
         """Run the bot."""

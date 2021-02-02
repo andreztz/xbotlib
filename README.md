@@ -28,6 +28,7 @@ XMPP bot experiments going on in
   - [Storage back-end](#storage-back-end)
   - [Loading Plugins](#loading-plugins)
   - [Serving HTTP](#serving-http)
+  - [Invitations](#invitations)
   - [API Reference](#api-reference)
     - [Bot.direct(message)](#bot-direct-message)
     - [Bot.group(message)](#bot-group-message)
@@ -200,8 +201,7 @@ deployments.
 In order to store data you can make use of the `self.db` attribute of the `Bot`
 class. It is a Python dictionary which will be saved to disk automatically for
 you as a `<nick>.json` in your current working directory. The name and path to
-this file can be configured using the output option (e.g. `python bot.py
---output /var/www/html`)
+this file can be configured using the output option (e.g. `python bot.py --output /var/www/html`)
 
 ```python
 def group(self, message):
@@ -301,6 +301,15 @@ function, you'll need to make use of [some type of persistent
 storage](#storage-back-end). Your `serve` function can read from the storage
 back-end and then respond. This is usually as simple as accessing the `self.db`
 attribute.
+
+### Invitations
+
+As long as the `--no-auto-join` option is not set (via the configuration file
+or environment also), then your bot will automatically join any room it is
+invited to. Rooms that your bot has been invited to will be stored in the
+`.xbotlib/data.json` file. If your bot is turned off or fails for some reason
+then it will read this file when turned back on to see what rooms it should
+re-join automatically. The `data.json` file can be edited freely by hand.
 
 ### API Reference
 
