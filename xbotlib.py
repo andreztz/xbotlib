@@ -26,9 +26,10 @@ class SimpleDatabase(dict):
     ease of hacking and accessibility and not for performance or efficiency.
     """
 
-    def __init__(self, filename, *args, **kwargs):
+    def __init__(self, filename, *args, log=None, **kwargs):
         """Initialise the object."""
         self.filename = Path(filename).absolute()
+        self.log = log
         self._loads()
         self.update(*args, **kwargs)
 
@@ -79,6 +80,7 @@ class SimpleMessage:
         """Initialise the object."""
         self.message = message
         self.bot = bot
+        self.log = self.bot.log
 
     @property
     def text(self):
@@ -109,7 +111,7 @@ class SimpleMessage:
             filtered = list(filter(None, split))
             return filtered[-1].strip()
         except Exception as exception:
-            self.bot.log.error(f"Couldn't parse {body}: {exception}")
+            self.log.error(f"Couldn't parse {body}: {exception}")
             return None
 
     @property
@@ -670,7 +672,7 @@ class Bot(ClientXMPP):
 
         if self.storage == "file":
             try:
-                self.db = SimpleDatabase(file_storage_path)
+                self.db = SimpleDatabase(file_storage_path, log=self.log)
                 self.log.info("Successfully loaded file storage")
             except Exception as exception:
                 message = f"Failed to load {file_storage_path}: {exception}"
@@ -707,7 +709,7 @@ class Bot(ClientXMPP):
 
         try:
             internal_storage_path = f"{internal_dir}/data.json"
-            self._data = SimpleDatabase(internal_storage_path)
+            self._data = SimpleDatabase(internal_storage_path, log=self.log)
             self.log.info("Successfully loaded internal storage")
         except Exception as exception:
             message = f"Failed to load {internal_storage_path}: {exception}"
