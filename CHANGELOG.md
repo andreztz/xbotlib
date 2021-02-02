@@ -9,6 +9,7 @@
 - New internal runtime data store available in `.xbotlib/data.json` ([#11](https://git.vvvvvvaria.org/decentral1se/xbotlib/issues/11))
 - Add documentation for invitations management ([#11](https://git.vvvvvvaria.org/decentral1se/xbotlib/issues/11))
 - Fix `del` usage for `SimpleStorage` ([#5](https://github.com/decentral1se/xbotlib/issues/5))
+- Always log tracebacks for errors ([#6](https://github.com/decentral1se/xbotlib/issues/6))
 
 # xbotlib 0.15.2 (2021-01-24)
 
