@@ -412,7 +412,7 @@ you want to chat or just invite your bots for testing.
 
 ## More Examples
 
-See more examples on [git.vvvvvvaria.org](https://git.vvvvvvaria.org/explore/repos?q=xbotlib&topic=1).
+See more examples on [git.vvvvvvaria.org](https://git.vvvvvvaria.org/varia/bots).
 
 ## Deploy your bots
 
