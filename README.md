@@ -416,7 +416,7 @@ See more examples on [git.vvvvvvaria.org](https://git.vvvvvvaria.org/varia/bots)
 
 ## Deploy your bots
 
-See [bots.varia.zone](https://bots.varia.zone/).
+> Documentation coming **soon**.
 
 ## Roadmap
 
