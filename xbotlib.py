@@ -490,11 +490,7 @@ class Bot(ClientXMPP):
         self.no_auto_join = no_auto_join
         self.port = port
         self.serve_web = serve_web
-
-        self.template = None
-        if self.serve_web:
-            self.template = self.load_template(template)
-
+        self.template = self.load_template(template)
         self.storage = storage
         self.output = Path(output).absolute()
 

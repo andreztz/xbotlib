@@ -258,6 +258,7 @@ easily template and generate HTML. The web server is provided by
 
 The default template search path is `index.html.j2` in the current working
 directory. This can be configured through the usual configuration entrypoints.
+It is possible to use the template without the built-in server too!
 
 Here's a small example that renders a random ASCII letter and uses a stylesheet.
 
